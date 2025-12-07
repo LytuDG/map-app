@@ -36,118 +36,75 @@
 <ion-content [fullscreen]="true" class="ion-padding-bottom">
 
   <div class="content-wrapper">
-    <!-- Stories / Status -->
-    <div class="stories-section ion-padding-start ion-margin-bottom">
-      <div class="story-item" *ngFor="let s of stories">
-        <div class="story-ring" [class.active]="s.active" [class.user]="s.isUser">
-          <ion-avatar>
-            <img [src]="s.img" class="img-load" />
-          </ion-avatar>
-          <div class="add-icon" *ngIf="s.isUser">+</div>
-        </div>
-        <ion-text class="story-name">{{ s.name }}</ion-text>
-      </div>
-    </div>
+    <!-- Feed List -->
+    <div class="feed-list ion-padding-horizontal ion-padding-top">
 
-    <!-- Unified Feed -->
-    <div class="feed-list ion-padding-horizontal">
+      <div *ngFor="let item of feedItems" class="unique-feed-card">
 
-      <!-- Normalized Cards -->
-      <div *ngFor="let item of feedItems" class="feed-card">
+        <!-- 1. Media Area -->
+        <div class="card-media-wrapper">
+          <img [src]="item.img" class="main-img img-load" loading="lazy" />
 
-        <!-- 1. Header (Consistent) -->
-        <div class="card-header">
-          <div class="user-info">
+          <!-- Badges -->
+          <div class="badges-container top-right">
+            <div class="badge-pill" *ngIf="item.type === 'event'">{{ item.date }}</div>
+            <div class="badge-pill deal" *ngIf="item.type === 'deal'">{{ item.offer }}</div>
+          </div>
+
+          <!-- User Avatar in bottom-right corner -->
+          <div class="avatar-corner">
             <ion-avatar>
               <img [src]="item.userImg" class="img-load" />
             </ion-avatar>
-            <div class="user-text">
-              <span class="main-text">{{ item.type === 'post' ? item.user : item.name }}</span>
-              <span class="sub-text">{{ item.type === 'post' ? item.location : item.category }}</span>
+          </div>
+        </div>
+
+        <!-- 2. Content Body -->
+        <div class="card-body">
+
+          <div class="header-row">
+            <div class="main-info">
+              <span class="username">{{ item.type === 'post' ? item.user : item.name }}</span>
+              <span class="location-label">
+                <ion-icon name="location-sharp"></ion-icon>
+                {{ item.type === 'post' ? item.location : item.category }}
+              </span>
             </div>
-          </div>
-        </div>
 
-        <!-- 2. Media (Consistent) -->
-        <div class="card-media img-load">
-          <img [src]="item.img" loading="lazy" />
-
-          <!-- Overlays -->
-          <div class="overlay-badge date-badge" *ngIf="item.type === 'event'">
-            {{ item.date }}
-          </div>
-          <div class="overlay-badge deal-badge" *ngIf="item.type === 'deal'" [style.background]="item.color">
-            {{ item.offer }}
-          </div>
-
-          <!-- Action Button for Business/Events (e.g. Join) overlaid or bottom -->
-          <div class="overlay-action" *ngIf="item.type === 'event' || item.type === 'deal'">
-            <!-- Optional: put specific action here if design requires -->
-          </div>
-        </div>
-
-        <!-- 3. Actions (NOW CONSISTENT FOR ALL) -->
-        <div class="card-actions-wrapper">
-
-          <!-- Primary Social Actions Row (Like, Comment, Share) -->
-          <div class="social-row">
-            <div class="left-actions">
-              <ion-button fill="clear" class="action-icon-btn" (click)="toggleLike(item)">
+            <!-- Minimal Actions -->
+            <div class="mini-actions">
+              <ion-button fill="clear" size="small" class="icon-only" (click)="toggleLike(item)">
                 <ion-icon [name]="item.liked ? 'heart' : 'heart-outline'" [class.liked]="item.liked"></ion-icon>
               </ion-button>
-              <ion-button fill="clear" class="action-icon-btn" (click)="handleAction('comment')">
-                <ion-icon name="chatbubble-outline"></ion-icon>
-              </ion-button>
-              <ion-button fill="clear" class="action-icon-btn" (click)="handleAction('share')">
+              <ion-button fill="clear" size="small" class="icon-only" (click)="handleAction('share')">
                 <ion-icon name="paper-plane-outline"></ion-icon>
               </ion-button>
             </div>
-
-            <!-- Specific CTA button if Business/Event -->
-            <div class="right-actions" *ngIf="item.type !== 'post'">
-              <ion-button shape="round" size="small" [fill]="item.going ? 'solid' : 'outline'"
-                [color]="item.going ? 'success' : 'dark'" class="main-cta"
-                (click)="item.type === 'event' ? toggleJoin(item) : handleAction('click_cta')">
-                {{ item.actionLabel || 'Ver Más' }}
-              </ion-button>
-            </div>
-
-            <!-- Bookmark for Posts -->
-            <div class="right-actions" *ngIf="item.type === 'post'">
-              <ion-button fill="clear" class="action-icon-btn">
-                <ion-icon name="bookmark-outline"></ion-icon>
-              </ion-button>
-            </div>
           </div>
 
-          <!-- Likes Count -->
-          <div class="context-row">
-            <span class="likes-count" *ngIf="item.likes">{{ item.likes }} Me gusta</span>
-
-            <!-- Extra Context for Events/Biz -->
-            <span class="meta-context" *ngIf="item.type === 'event' && !item.likes">
-              <ion-icon name="people-outline"></ion-icon> {{ item.attendees }} asisten
-            </span>
-            <span class="meta-context" *ngIf="item.type === 'business' && item.rating && !item.likes">
-              ⭐ {{ item.rating }}
-            </span>
+          <div class="description-row">
+            <p>{{ item.desc }}</p>
           </div>
 
-        </div>
+          <!-- CTA / Footer -->
+          <div class="footer-row" *ngIf="item.type !== 'post'">
+            <ion-button expand="block" fill="outline" shape="round" size="small" class="action-btn"
+              (click)="item.type === 'event' ? toggleJoin(item) : handleAction('click_cta')">
+              {{ item.actionLabel || 'Ver Detalles' }}
+            </ion-button>
+          </div>
 
-        <!-- 4. Content / Description -->
-        <div class="card-content">
-          <p>
-            <span class="username" *ngIf="item.type === 'post'">{{ item.user }}</span>
-            <span class="username" *ngIf="item.type !== 'post'">{{ item.name }}</span>
-            {{ item.desc }}
-          </p>
-          <div class="comments-link" (click)="handleAction('comment')">Ver los comentarios</div>
+          <div class="footer-row post-footer" *ngIf="item.type === 'post'">
+            <span class="likes-text" *ngIf="item.likes">{{ item.likes }} likes</span>
+            <span class="comments-text" (click)="handleAction('comment')">Ver comentarios</span>
+          </div>
+
         </div>
 
       </div>
 
     </div>
+
   </div>
 
   <div style="height: 80px;"></div>

@@ -1,28 +1,26 @@
 <ion-tabs>
     <ion-tab-bar slot="bottom" class="custom-tab-bar">
         <ion-tab-button tab="feed">
-            <ion-icon name="home-outline"></ion-icon>
+            <lucide-icon [img]="Home" [size]="24"></lucide-icon>
             <ion-label>Inicio</ion-label>
         </ion-tab-button>
 
         <ion-tab-button tab="map">
-            <ion-icon name="map-outline"></ion-icon>
+            <lucide-icon [img]="MapPin" [size]="24"></lucide-icon>
             <ion-label>Mapa</ion-label>
         </ion-tab-button>
 
         <ion-tab-button tab="add" class="add-tab-btn">
-            <div class="add-btn-circle">
-                <ion-icon name="add"></ion-icon>
-            </div>
+            <lucide-icon [img]="Plus" [size]="28" [strokeWidth]="2.5"></lucide-icon>
         </ion-tab-button>
 
         <ion-tab-button tab="events">
-            <ion-icon name="calendar-outline"></ion-icon>
+            <lucide-icon [img]="Calendar" [size]="24"></lucide-icon>
             <ion-label>Eventos</ion-label>
         </ion-tab-button>
 
         <ion-tab-button tab="profile">
-            <ion-icon name="person-outline"></ion-icon>
+            <lucide-icon [img]="User" [size]="24"></lucide-icon>
             <ion-label>Perfil</ion-label>
         </ion-tab-button>
     </ion-tab-bar>

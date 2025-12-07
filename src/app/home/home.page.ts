@@ -27,12 +27,15 @@ import {
   bookmarkOutline,
   timeOutline,
   star,
+  starOutline,
   heart,
   chatbubbleOutline,
   paperPlaneOutline,
   checkmarkCircle,
   peopleOutline,
   pricetagOutline,
+  locationSharp,
+  sendOutline,
 } from 'ionicons/icons';
 import { CommentsModalComponent } from '../components/comments-modal/comments-modal.component';
 
@@ -51,40 +54,12 @@ import { CommentsModalComponent } from '../components/comments-modal/comments-mo
     IonButtons,
     IonIcon,
     IonAvatar,
-    IonText,
+    IonAvatar,
     IonButton,
   ],
 })
 export class HomePage implements OnInit {
-  // Stories (Horizontal Scroll) remains distinct at top
-  stories = [
-    {
-      name: 'Tu historia',
-      img: 'https://images.unsplash.com/photo-1535713875002-d1d0cf377fde?q=80&w=200',
-      active: false,
-      isUser: true,
-    },
-    {
-      name: 'Café O.',
-      img: 'https://images.unsplash.com/photo-1554118811-1e0d58224f24?q=80&w=200',
-      active: true,
-    },
-    {
-      name: 'Yoga Spot',
-      img: 'https://images.unsplash.com/photo-1544367563-12123d8965cd?q=80&w=200',
-      active: true,
-    },
-    {
-      name: 'Bar 99',
-      img: 'https://images.unsplash.com/photo-1514933651103-005eec06c04b?q=80&w=200',
-      active: true,
-    },
-    {
-      name: 'Art Gal.',
-      img: 'https://images.unsplash.com/photo-1561214115-f2f134cc4912?q=80&w=200',
-      active: false,
-    },
-  ];
+  // Feed Items (Mixed Content: Posts, Events, Deals)
 
   // Unified Feed Data
   feedItems: any[] = [
@@ -171,20 +146,23 @@ export class HomePage implements OnInit {
     private modalCtrl: ModalController
   ) {
     addIcons({
+      notificationsOutline,
+      locationSharp,
+      sendOutline,
+      paperPlaneOutline,
       locationOutline,
       heartOutline,
       compassOutline,
       mapOutline,
       calendarOutline,
       homeOutline,
-      notificationsOutline,
       searchOutline,
       bookmarkOutline,
       timeOutline,
       star,
+      starOutline,
       heart,
       chatbubbleOutline,
-      paperPlaneOutline,
       checkmarkCircle,
       peopleOutline,
       pricetagOutline,
