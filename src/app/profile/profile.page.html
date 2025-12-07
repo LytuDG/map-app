@@ -1,0 +1,191 @@
+<ion-header class="ion-no-border">
+  <ion-toolbar>
+    <ion-buttons slot="start">
+      <ion-back-button defaultHref="/feed"></ion-back-button>
+    </ion-buttons>
+    <ion-title>{{ isBusiness ? businessProfile.name : userProfile.username }}</ion-title>
+    <ion-buttons slot="end">
+      <ion-button (click)="toggleType()">
+        <ion-icon name="share-social-outline"></ion-icon>
+      </ion-button>
+      <ion-button>
+        <ion-icon name="settings-outline"></ion-icon>
+      </ion-button>
+    </ion-buttons>
+  </ion-toolbar>
+</ion-header>
+
+<ion-content [fullscreen]="true">
+
+  <!-- ================= USER PROFILE VIEW ================= -->
+  <div class="user-profile" *ngIf="!isBusiness">
+    <div class="header-section ion-padding">
+      <div class="top-row">
+        <ion-avatar class="main-avatar">
+          <img [src]="userProfile.img" class="img-load" />
+        </ion-avatar>
+        <div class="stats-row">
+          <div class="stat">
+            <span class="num">{{ userProfile.posts }}</span>
+            <span class="label">Posts</span>
+          </div>
+          <div class="stat">
+            <span class="num">{{ userProfile.followers }}</span>
+            <span class="label">Seguidores</span>
+          </div>
+          <div class="stat">
+            <span class="num">{{ userProfile.following }}</span>
+            <span class="label">Seguidos</span>
+          </div>
+        </div>
+      </div>
+
+      <div class="details-section">
+        <h2 class="name">{{ userProfile.name }}</h2>
+        <p class="bio">{{ userProfile.bio }}</p>
+      </div>
+
+      <div class="action-buttons">
+        <ion-button expand="block" shape="round" class="edit-btn">Editar Perfil</ion-button>
+      </div>
+    </div>
+
+    <!-- User Content Grid -->
+    <div class="content-grid">
+      <ion-segment [(ngModel)]="segment" mode="md">
+        <ion-segment-button value="posts">
+          <ion-icon name="grid-outline"></ion-icon>
+        </ion-segment-button>
+        <ion-segment-button value="saved">
+          <ion-icon name="bookmark-outline"></ion-icon>
+        </ion-segment-button>
+      </ion-segment>
+
+      <div class="grid-container" *ngIf="segment === 'posts'">
+        <div class="grid-item img-load" *ngFor="let img of userProfile.gallery"
+          [style.background-image]="'url(' + img + ')'"></div>
+      </div>
+    </div>
+  </div>
+
+
+  <!-- ================= BUSINESS PROFILE VIEW ================= -->
+  <div class="business-profile" *ngIf="isBusiness">
+
+    <div class="cover-image img-load" [style.background-image]="'url(' + businessProfile.cover + ')'">
+      <div class="gradient-overlay"></div>
+    </div>
+
+    <div class="business-info-card">
+      <div class="logo-row">
+        <div class="biz-logo img-load">
+          <img [src]="businessProfile.img" />
+        </div>
+        <div class="biz-actions">
+          <ion-button size="small" shape="round" color="primary">Seguir</ion-button>
+          <ion-button size="small" shape="round" fill="outline">Mensaje</ion-button>
+        </div>
+      </div>
+
+      <div class="text-info ion-padding-horizontal">
+        <h1>{{ businessProfile.name }}</h1>
+        <p class="category">{{ businessProfile.category }} • ⭐ {{ businessProfile.rating }}</p>
+        <p class="desc">{{ businessProfile.info }}</p>
+
+        <div class="meta-tags">
+          <div class="tag"><ion-icon name="time-outline"></ion-icon> Abierto ahora</div>
+          <div class="tag"><ion-icon name="map-outline"></ion-icon> 0.2 km</div>
+        </div>
+      </div>
+
+      <div class="quick-actions ion-padding">
+        <div class="q-btn">
+          <div class="icon-circle"><ion-icon name="call-outline"></ion-icon></div>
+          <span>Llamar</span>
+        </div>
+        <div class="q-btn">
+          <div class="icon-circle"><ion-icon name="globe-outline"></ion-icon></div>
+          <span>Web</span>
+        </div>
+        <div class="q-btn">
+          <div class="icon-circle"><ion-icon name="map-outline"></ion-icon></div>
+          <span>Mapa</span>
+        </div>
+      </div>
+
+      <!-- Tabs for Menu, Events and Posts -->
+      <div class="content-tabs ion-margin-top">
+        <ion-segment [(ngModel)]="businessSegment" mode="md">
+          <ion-segment-button value="menu">
+            <ion-label>Menú</ion-label>
+          </ion-segment-button>
+          <ion-segment-button value="events">
+            <ion-label>Eventos</ion-label>
+          </ion-segment-button>
+          <ion-segment-button value="posts">
+            <ion-label>Posts</ion-label>
+          </ion-segment-button>
+        </ion-segment>
+      </div>
+
+      <!-- Tab Content -->
+      <div class="tab-content" [ngSwitch]="businessSegment">
+
+        <!-- MENU TAB -->
+        <div *ngSwitchCase="'menu'" class="menu-section ion-padding-horizontal">
+          <div class="menu-search">
+            <ion-searchbar placeholder="Buscar..." (ionInput)="filterMenu($event)" searchIcon="search-outline"
+              class="custom-search">
+            </ion-searchbar>
+          </div>
+
+          <div class="menu-list">
+            <div class="menu-item" *ngFor="let item of filteredMenu">
+              <ion-thumbnail slot="start" class="img-load">
+                <img [src]="item.img" alt="{{ item.name }}" />
+              </ion-thumbnail>
+              <div class="item-info">
+                <div class="text-col">
+                  <h4>{{ item.name }}</h4>
+                  <p>{{ item.desc }}</p>
+                </div>
+                <div class="price-row">
+                  <div class="price">{{ item.price }}</div>
+                  <ion-button fill="solid" shape="round" size="small" color="dark" class="add-btn">
+                    <ion-icon name="add" slot="icon-only"></ion-icon>
+                  </ion-button>
+                </div>
+              </div>
+            </div>
+            <div class="empty-state" *ngIf="filteredMenu.length === 0">
+              No se encontraron productos.
+            </div>
+          </div>
+        </div>
+
+        <!-- EVENTS TAB -->
+        <div *ngSwitchCase="'events'" class="ion-padding">
+          <div class="event-mini-card" *ngFor="let e of businessProfile.events">
+            <div class="e-img img-load" [style.background-image]="'url(' + e.img + ')'">
+              <span class="date">{{ e.date }}</span>
+            </div>
+            <div class="e-info">
+              <h4>{{ e.title }}</h4>
+              <ion-button size="small" fill="outline" shape="round">Ver Detalles</ion-button>
+            </div>
+          </div>
+        </div>
+
+        <!-- POSTS TAB -->
+        <div *ngSwitchCase="'posts'" class="grid-container">
+          <div class="grid-item img-load" *ngFor="let img of businessProfile.posts"
+            [style.background-image]="'url(' + img + ')'"></div>
+        </div>
+
+      </div>
+
+    </div>
+  </div>
+
+  <div style="height: 40px"></div>
+</ion-content>

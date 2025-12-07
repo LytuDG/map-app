@@ -1,0 +1,94 @@
+<ion-content [fullscreen]="true">
+
+    <div class="map-container">
+        <!-- Search & Filters Overlay -->
+        <div class="map-interface" [class.hidden]="selectedPlace">
+            <div class="search-box">
+                <ion-searchbar class="glass-search" placeholder="Buscar en el mapa..."></ion-searchbar>
+            </div>
+
+            <div class="filter-chips">
+                <ion-chip color="dark" mode="ios" outline="false">
+                    <ion-icon name="restaurant-outline"></ion-icon>
+                    <ion-label>Comida</ion-label>
+                </ion-chip>
+                <ion-chip color="dark" mode="ios" outline="true">
+                    <ion-icon name="beer-outline"></ion-icon>
+                    <ion-label>Bares</ion-label>
+                </ion-chip>
+                <ion-chip color="dark" mode="ios" outline="true">
+                    <ion-icon name="calendar-outline"></ion-icon>
+                    <ion-label>Eventos</ion-label>
+                </ion-chip>
+            </div>
+        </div>
+
+        <!-- Dynamic Map Background with Pins -->
+        <div class="map-bg" (click)="closePreview()">
+            <div class="map-pin" *ngFor="let p of places" [style.top]="p.top" [style.left]="p.left"
+                [style.--pin-color]="p.color" (click)="$event.stopPropagation(); selectPlace(p)"
+                [class.selected]="selectedPlace === p">
+                <div class="pin-icon">
+                    <ion-icon [name]="p.icon"></ion-icon>
+                </div>
+                <div class="pin-pulse"></div>
+            </div>
+        </div>
+
+        <!-- Floating Action Button -->
+        <ion-fab vertical="bottom" horizontal="end" slot="fixed" class="location-fab" *ngIf="!selectedPlace">
+            <ion-fab-button color="light">
+                <ion-icon name="locate-outline"></ion-icon>
+            </ion-fab-button>
+        </ion-fab>
+
+        <!-- MINI PROFILE DRAWER (Slide up) -->
+        <div class="place-preview-drawer" *ngIf="selectedPlace">
+            <div class="drawer-handle"></div>
+
+            <div class="preview-header">
+                <div class="place-imgs">
+                    <div class="cover img-load" [style.background-image]="'url(' + selectedPlace.cover + ')'"></div>
+                    <div class="logo-wrapper">
+                        <ion-avatar>
+                            <img [src]="selectedPlace.img" />
+                        </ion-avatar>
+                    </div>
+                </div>
+
+                <div class="place-info ion-padding-horizontal">
+                    <div class="title-row">
+                        <h2>{{ selectedPlace.name }}</h2>
+                        <div class="rating">
+                            <ion-icon name="star" color="warning"></ion-icon>
+                            <span>{{ selectedPlace.rating }}</span>
+                        </div>
+                    </div>
+                    <p class="category">{{ selectedPlace.category }}</p>
+                    <p class="desc">{{ selectedPlace.desc }}</p>
+                </div>
+
+                <div class="action-grid ion-padding">
+                    <ion-button fill="outline" shape="round" size="small" color="secondary">
+                        <ion-icon name="call-outline" slot="start"></ion-icon>
+                        Llamar
+                    </ion-button>
+                    <ion-button fill="outline" shape="round" size="small" color="secondary">
+                        <ion-icon name="navigate-outline" slot="start"></ion-icon>
+                        Ir
+                    </ion-button>
+                    <ion-button shape="round" size="small" (click)="goToProfile()">
+                        Ver Perfil
+                        <ion-icon name="arrow-forward-outline" slot="end"></ion-icon>
+                    </ion-button>
+                </div>
+            </div>
+
+            <ion-button fill="clear" class="close-btn" (click)="closePreview()">
+                <ion-icon name="close-outline"></ion-icon>
+            </ion-button>
+        </div>
+
+    </div>
+
+</ion-content>

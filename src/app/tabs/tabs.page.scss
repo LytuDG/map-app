@@ -1,0 +1,53 @@
+ion-tab-bar.custom-tab-bar {
+    --background: rgba(255, 255, 255, 0.95);
+    --border: none;
+    box-shadow: 0 -5px 20px rgba(0, 0, 0, 0.03);
+    padding-bottom: 15px; // Reduced padding for better centering
+    height: 80px; // Increased height
+    backdrop-filter: blur(10px);
+    contain: none; // Critical for allowing overflow
+    overflow: visible;
+
+    ion-tab-button {
+        --color: #ccc;
+        --color-selected: var(--ion-color-primary);
+        background: transparent; // Ensure button bg doesn't clip
+
+        ion-icon {
+            font-size: 24px;
+            margin-bottom: 4px;
+        }
+
+        ion-label {
+            font-size: 10px;
+            font-weight: 600;
+            margin-top: 2px;
+        }
+    }
+
+    .add-tab-btn {
+        --color-selected: white;
+        position: relative;
+        overflow: visible;
+        z-index: 10;
+        top: -12px; // Adjusted top
+
+        .add-btn-circle {
+            width: 56px; // Slightly larger
+            height: 56px;
+            background: var(--ion-color-primary);
+            border-radius: 50%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            box-shadow: 0 8px 20px rgba(0, 0, 0, 0.25); // Better shadow
+            border: 4px solid white; // Border to separate from bar
+
+            ion-icon {
+                color: white;
+                font-size: 32px;
+                margin: 0;
+            }
+        }
+    }
+}

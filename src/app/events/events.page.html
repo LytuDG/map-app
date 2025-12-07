@@ -1,0 +1,112 @@
+<ion-header class="ion-no-border">
+    <ion-toolbar>
+        <ion-title size="large">Eventos</ion-title>
+    </ion-toolbar>
+    <ion-toolbar>
+        <ion-segment [(ngModel)]="segment" mode="ios">
+            <ion-segment-button value="upcoming">
+                <ion-label>Descubrir</ion-label>
+            </ion-segment-button>
+            <ion-segment-button value="going">
+                <ion-label>Mis Eventos</ion-label>
+            </ion-segment-button>
+        </ion-segment>
+    </ion-toolbar>
+</ion-header>
+
+<ion-content [fullscreen]="true" class="ion-padding-bottom">
+
+    <!-- Search & Filters -->
+    <div class="search-section ion-padding-horizontal ion-padding-top">
+        <ion-searchbar placeholder="Buscar eventos..." searchIcon="search-outline" class="custom-search"
+            (ionInput)="search($event)"></ion-searchbar>
+
+        <div class="categories-row">
+            <ion-chip *ngFor="let cat of categories" [outline]="selectedCategory !== cat.id"
+                [color]="selectedCategory === cat.id ? 'primary' : 'medium'" (click)="setCategory(cat.id)">
+                <ion-label>{{ cat.name }}</ion-label>
+            </ion-chip>
+        </div>
+    </div>
+
+
+    <div class="events-list ion-padding">
+
+        <div class="event-card-vertical" *ngFor="let e of filteredEvents">
+
+            <!-- 1. Header with Host Info -->
+            <div class="card-header ion-padding-horizontal ion-padding-top">
+                <div class="host-info">
+                    <ion-avatar>
+                        <img [src]="e.hostImg" />
+                    </ion-avatar>
+                    <div class="host-text">
+                        <span class="host-name">{{ e.hostName }}</span>
+                        <span class="time-posted">Publicado hace 2h</span>
+                    </div>
+                </div>
+                <div class="more-options">
+                    <ion-icon name="ellipsis-horizontal"></ion-icon>
+                </div>
+            </div>
+
+            <!-- 2. Main Image -->
+            <div class="event-image-wrapper ion-margin-top">
+                <div class="event-image" [style.background-image]="'url(' + e.img + ')'">
+                    <div class="date-badge">{{ e.date }}</div>
+                    <div class="price-badge" *ngIf="e.price">{{ e.price }}</div>
+                </div>
+            </div>
+
+            <!-- 3. Details -->
+            <div class="event-details ion-padding-horizontal">
+
+                <div class="title-row ion-margin-bottom">
+                    <h4>{{ e.title }}</h4>
+                </div>
+
+                <div class="meta-info">
+                    <div class="meta-item">
+                        <ion-icon name="time-outline"></ion-icon>
+                        <span>{{ e.time }}</span>
+                    </div>
+                    <div class="meta-item">
+                        <ion-icon name="location-outline"></ion-icon>
+                        <span>{{ e.location }} ({{ e.distance }})</span>
+                    </div>
+                    <div class="meta-item" *ngIf="e.attendees">
+                        <ion-icon name="people-outline"></ion-icon>
+                        <span>{{ e.attendees }} asistentes</span>
+                    </div>
+                </div>
+
+                <!-- 4. Actions Row (Feed Style) -->
+                <div class="actions-row">
+                    <div class="left-actions">
+                        <ion-button fill="clear" class="action-btn" (click)="toggleLike(e)">
+                            <ion-icon [name]="e.liked ? 'heart' : 'heart-outline'" [class.liked]="e.liked"></ion-icon>
+                        </ion-button>
+                        <ion-button fill="clear" class="action-btn">
+                            <ion-icon name="map-outline"></ion-icon>
+                        </ion-button>
+                    </div>
+
+                    <div class="right-actions">
+                        <ion-button shape="round" size="small" [color]="e.going ? 'success' : 'dark'" class="join-btn"
+                            (click)="toggleGoing(e)">
+                            {{ e.going ? 'Asistiré' : 'Asistir' }}
+                        </ion-button>
+                    </div>
+                </div>
+
+            </div>
+        </div>
+
+        <div class="empty-state" *ngIf="filteredEvents.length === 0">
+            <p>No se encontraron eventos.</p>
+        </div>
+
+    </div>
+
+    <div style="height: 80px"></div>
+</ion-content>

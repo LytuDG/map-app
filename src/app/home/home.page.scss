@@ -1,0 +1,313 @@
+// Custom Header with Logo
+.custom-header {
+  position: sticky;
+  top: 0;
+  z-index: 999;
+  background: rgba(255, 255, 255, 0.85);
+  backdrop-filter: blur(12px);
+  -webkit-backdrop-filter: blur(12px);
+
+  ion-toolbar {
+    --background: transparent;
+    --border-width: 0;
+    padding-top: env(safe-area-inset-top); // Handle notch area
+    padding-bottom: 5px;
+
+    .logo-container {
+      display: flex;
+      align-items: center;
+      gap: 12px;
+      padding-left: 16px;
+
+      .map-social-logo {
+        display: flex;
+        align-items: center;
+        justify-content: center;
+      }
+
+      .app-logo-text {
+        font-weight: 800;
+        font-size: 24px;
+        letter-spacing: -1px;
+        color: var(--ion-text-color);
+        padding: 0;
+      }
+    }
+  }
+
+  .icon-btn {
+    --color: var(--ion-text-color);
+    margin-right: 8px;
+    position: relative;
+
+    ion-icon {
+      font-size: 26px;
+    }
+
+    .badge-dot {
+      position: absolute;
+      top: 10px;
+      right: 10px;
+      width: 8px;
+      height: 8px;
+      background: #ed4956;
+      border-radius: 50%;
+      border: 2px solid white;
+    }
+  }
+}
+
+// Common Placeholder
+.img-load {
+  background-color: #f0f0f0;
+  transition: opacity 0.3s;
+}
+
+// Stories
+.stories-section {
+  display: flex;
+  overflow-x: auto;
+  gap: 16px;
+  scrollbar-width: none;
+
+  &::-webkit-scrollbar {
+    display: none;
+  }
+
+  .story-item {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    min-width: 72px;
+
+    .story-ring {
+      width: 72px;
+      height: 72px;
+      border-radius: 50%;
+      padding: 3px;
+      margin-bottom: 6px;
+      position: relative;
+      border: 2px solid transparent;
+
+      &.active {
+        background: linear-gradient(45deg, #f09433 0%, #e6683c 25%, #dc2743 50%, #cc2366 75%, #bc1888 100%);
+        -webkit-mask: linear-gradient(#fff 0 0) content-box, linear-gradient(#fff 0 0);
+        -webkit-mask-composite: xor;
+        mask-composite: exclude;
+        padding: 2px;
+      }
+
+      &.user {
+        border: none;
+        padding: 0;
+
+        .add-icon {
+          position: absolute;
+          bottom: 0;
+          right: 0;
+          background: var(--ion-color-primary);
+          color: white;
+          width: 22px;
+          height: 22px;
+          border-radius: 50%;
+          border: 3px solid white;
+          display: flex;
+          align-items: center;
+          justify-content: center;
+          font-weight: 800;
+          font-size: 14px;
+        }
+      }
+
+      ion-avatar {
+        width: 100%;
+        height: 100%;
+        border: 3px solid white;
+      }
+    }
+
+    .story-name {
+      font-size: 11px;
+      font-weight: 500;
+      color: #666;
+    }
+  }
+}
+
+// Unified Feed Card Styling
+.feed-list {
+  display: flex;
+  flex-direction: column;
+  gap: 24px;
+}
+
+.feed-card {
+  background: white;
+  border-bottom: 1px solid #f0f0f0;
+  padding-bottom: 20px;
+
+  // 1. Header
+  .card-header {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    margin-bottom: 12px;
+
+    .user-info {
+      display: flex;
+      align-items: center;
+      gap: 10px;
+
+      ion-avatar {
+        width: 40px;
+        height: 40px;
+      }
+
+      .user-text {
+        display: flex;
+        flex-direction: column;
+
+        .main-text {
+          font-size: 14px;
+          font-weight: 700;
+          color: var(--ion-text-color);
+        }
+
+        .sub-text {
+          font-size: 12px;
+          color: #888;
+        }
+      }
+    }
+
+    .more-btn {
+      --color: #333;
+    }
+  }
+
+  // 2. Media
+  .card-media {
+    width: 100%;
+    position: relative;
+    border-radius: 12px;
+    overflow: hidden;
+    margin-bottom: 12px;
+    border: 1px solid rgba(0, 0, 0, 0.05);
+
+    img {
+      width: 100%;
+      height: auto;
+      display: block;
+      max-height: 500px;
+      object-fit: cover;
+    }
+
+    .overlay-badge {
+      position: absolute;
+      top: 12px;
+      left: 12px;
+      padding: 6px 12px;
+      border-radius: 8px;
+      font-weight: 700;
+      font-size: 11px;
+      text-transform: uppercase;
+      box-shadow: 0 4px 10px rgba(0, 0, 0, 0.15);
+
+      &.date-badge {
+        background: white;
+        color: black;
+      }
+
+      &.deal-badge {
+        color: white;
+      }
+    }
+  }
+
+  // 3. Actions (Updated)
+  .card-actions-wrapper {
+    margin-bottom: 8px;
+
+    .social-row {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+
+      .left-actions {
+        display: flex;
+        gap: 4px;
+      }
+
+      .right-actions {
+        display: flex;
+        align-items: center;
+      }
+
+      .action-icon-btn {
+        --padding-start: 4px;
+        --padding-end: 4px;
+        height: 40px;
+
+        ion-icon {
+          font-size: 26px;
+          color: #1a1a1a;
+        }
+
+        .liked {
+          color: #ed4956;
+        }
+      }
+
+      .main-cta {
+        font-weight: 700;
+        font-size: 11px;
+        height: 32px;
+        --box-shadow: none;
+      }
+    }
+
+    .context-row {
+      padding-left: 4px;
+      margin-top: 4px;
+
+      .likes-count {
+        font-weight: 700;
+        font-size: 14px;
+        display: block;
+      }
+
+      .meta-context {
+        font-size: 13px;
+        color: #666;
+        font-weight: 500;
+        display: flex;
+        align-items: center;
+        gap: 4px;
+      }
+    }
+  }
+
+  // 4. Content
+  .card-content {
+    margin-top: 8px;
+    padding-left: 4px;
+
+    p {
+      font-size: 14px;
+      line-height: 1.5;
+      color: var(--ion-text-color);
+      margin: 0 0 6px 0;
+
+      .username {
+        font-weight: 700;
+        margin-right: 6px;
+      }
+    }
+
+    .comments-link {
+      font-size: 13px;
+      color: #888;
+      margin-top: 4px;
+    }
+  }
+}
