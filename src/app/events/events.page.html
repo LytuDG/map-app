@@ -1,16 +1,6 @@
-<ion-header class="ion-no-border">
-    <ion-toolbar>
-        <ion-title size="large">Eventos</ion-title>
-    </ion-toolbar>
-    <ion-toolbar>
-        <ion-segment [(ngModel)]="segment" mode="ios">
-            <ion-segment-button value="upcoming">
-                <ion-label>Descubrir</ion-label>
-            </ion-segment-button>
-            <ion-segment-button value="going">
-                <ion-label>Mis Eventos</ion-label>
-            </ion-segment-button>
-        </ion-segment>
+<ion-header class="ion-no-border custom-header">
+    <ion-toolbar color="white">
+        <ion-title class="page-title">Eventos</ion-title>
     </ion-toolbar>
 </ion-header>
 
@@ -18,61 +8,69 @@
 
     <!-- Search & Filters -->
     <div class="search-section ion-padding-horizontal ion-padding-top">
-        <ion-searchbar placeholder="Buscar eventos..." searchIcon="search-outline" class="custom-search"
-            (ionInput)="search($event)"></ion-searchbar>
+        <ion-searchbar placeholder="Buscar eventos..." class="custom-searchbar" (ionInput)="search($event)" mode="ios">
+        </ion-searchbar>
 
         <div class="categories-row">
             <ion-chip *ngFor="let cat of categories" [outline]="selectedCategory !== cat.id"
-                [color]="selectedCategory === cat.id ? 'primary' : 'medium'" (click)="setCategory(cat.id)">
+                [color]="selectedCategory === cat.id ? 'dark' : 'medium'" (click)="setCategory(cat.id)">
                 <ion-label>{{ cat.name }}</ion-label>
             </ion-chip>
         </div>
     </div>
 
+    <!-- Events Feed (Feed Style Cards) -->
+    <div class="events-feed ion-padding-horizontal">
 
-    <div class="events-list ion-padding">
+        <div class="unique-feed-card" *ngFor="let e of filteredEvents">
 
-        <div class="event-card-vertical" *ngFor="let e of filteredEvents">
+            <!-- 1. Media Area -->
+            <div class="card-media-wrapper">
+                <img [src]="e.img" class="main-img" loading="lazy" />
 
-            <!-- 1. Header with Host Info -->
-            <div class="card-header ion-padding-horizontal ion-padding-top">
-                <div class="host-info">
+                <!-- Badges -->
+                <div class="badges-container">
+                    <div class="badge-pill date">{{ e.date }}</div>
+                    <div class="badge-pill price" *ngIf="e.price">{{ e.price }}</div>
+                </div>
+
+                <!-- Avatar in corner -->
+                <div class="avatar-corner">
                     <ion-avatar>
                         <img [src]="e.hostImg" />
                     </ion-avatar>
-                    <div class="host-text">
-                        <span class="host-name">{{ e.hostName }}</span>
-                        <span class="time-posted">Publicado hace 2h</span>
+                </div>
+            </div>
+
+            <!-- 2. Content Body -->
+            <div class="card-body">
+
+                <div class="header-row">
+                    <div class="main-info">
+                        <span class="event-title">{{ e.title }}</span>
+                        <span class="host-name" (click)="navigateToProfile(e)">{{ e.hostName }}</span>
+                    </div>
+
+                    <!-- Actions -->
+                    <div class="mini-actions">
+                        <ion-button fill="clear" size="small" class="icon-only" (click)="toggleLike(e)">
+                            <ion-icon [name]="e.liked ? 'heart' : 'heart-outline'" [class.liked]="e.liked"></ion-icon>
+                        </ion-button>
+                        <ion-button fill="clear" size="small" class="icon-only">
+                            <ion-icon name="paper-plane-outline"></ion-icon>
+                        </ion-button>
                     </div>
                 </div>
-                <div class="more-options">
-                    <ion-icon name="ellipsis-horizontal"></ion-icon>
-                </div>
-            </div>
 
-            <!-- 2. Main Image -->
-            <div class="event-image-wrapper ion-margin-top">
-                <div class="event-image" [style.background-image]="'url(' + e.img + ')'">
-                    <div class="date-badge">{{ e.date }}</div>
-                    <div class="price-badge" *ngIf="e.price">{{ e.price }}</div>
-                </div>
-            </div>
-
-            <!-- 3. Details -->
-            <div class="event-details ion-padding-horizontal">
-
-                <div class="title-row ion-margin-bottom">
-                    <h4>{{ e.title }}</h4>
-                </div>
-
-                <div class="meta-info">
+                <!-- Event Details -->
+                <div class="event-meta">
                     <div class="meta-item">
                         <ion-icon name="time-outline"></ion-icon>
                         <span>{{ e.time }}</span>
                     </div>
                     <div class="meta-item">
                         <ion-icon name="location-outline"></ion-icon>
-                        <span>{{ e.location }} ({{ e.distance }})</span>
+                        <span>{{ e.location }} • {{ e.distance }}</span>
                     </div>
                     <div class="meta-item" *ngIf="e.attendees">
                         <ion-icon name="people-outline"></ion-icon>
@@ -80,26 +78,17 @@
                     </div>
                 </div>
 
-                <!-- 4. Actions Row (Feed Style) -->
-                <div class="actions-row">
-                    <div class="left-actions">
-                        <ion-button fill="clear" class="action-btn" (click)="toggleLike(e)">
-                            <ion-icon [name]="e.liked ? 'heart' : 'heart-outline'" [class.liked]="e.liked"></ion-icon>
-                        </ion-button>
-                        <ion-button fill="clear" class="action-btn">
-                            <ion-icon name="map-outline"></ion-icon>
-                        </ion-button>
-                    </div>
-
-                    <div class="right-actions">
-                        <ion-button shape="round" size="small" [color]="e.going ? 'success' : 'dark'" class="join-btn"
-                            (click)="toggleGoing(e)">
-                            {{ e.going ? 'Asistiré' : 'Asistir' }}
-                        </ion-button>
-                    </div>
+                <!-- CTA Button -->
+                <div class="footer-row">
+                    <ion-button expand="block" [fill]="e.going ? 'solid' : 'outline'"
+                        [color]="e.going ? 'success' : 'dark'" shape="round" size="small" class="action-btn"
+                        (click)="toggleGoing(e)">
+                        {{ e.going ? '✓ Asistiré' : 'Asistir' }}
+                    </ion-button>
                 </div>
 
             </div>
+
         </div>
 
         <div class="empty-state" *ngIf="filteredEvents.length === 0">

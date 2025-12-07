@@ -1,6 +1,7 @@
 import { Component } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { FormsModule } from '@angular/forms';
+import { Router } from '@angular/router';
 import {
   IonContent,
   IonHeader,
@@ -26,6 +27,7 @@ import {
   peopleOutline,
   mapOutline,
   ellipsisHorizontal,
+  paperPlaneOutline,
 } from 'ionicons/icons';
 
 @Component({
@@ -40,8 +42,6 @@ import {
     IonHeader,
     IonToolbar,
     IonTitle,
-    IonSegment,
-    IonSegmentButton,
     IonLabel,
     IonIcon,
     IonButton,
@@ -51,7 +51,6 @@ import {
   ],
 })
 export class EventsPage {
-  segment = 'upcoming';
   searchTerm = '';
   selectedCategory = 'all';
 
@@ -153,19 +152,29 @@ export class EventsPage {
 
   filteredEvents = [...this.allEvents];
 
-  constructor() {
+  constructor(private router: Router) {
     addIcons({
-      calendarOutline,
+      paperPlaneOutline,
       timeOutline,
       locationOutline,
+      peopleOutline,
+      calendarOutline,
       checkmarkCircle,
       heart,
       heartOutline,
-      peopleOutline,
       mapOutline,
       ellipsisHorizontal,
     });
     this.filterEvents();
+  }
+
+  navigateToProfile(event: any) {
+    this.router.navigate(['/profile'], {
+      queryParams: {
+        id: event.hostName,
+        type: 'event',
+      },
+    });
   }
 
   toggleGoing(event: any) {
@@ -188,17 +197,14 @@ export class EventsPage {
 
   filterEvents() {
     this.filteredEvents = this.allEvents.filter((e) => {
-      // 1. Segment Filter
-      if (this.segment === 'going' && !e.going) return false;
-
-      // 2. Category Filter
+      // 1. Category Filter
       if (
         this.selectedCategory !== 'all' &&
         e.category !== this.selectedCategory
       )
         return false;
 
-      // 3. Search Filter
+      // 2. Search Filter
       if (this.searchTerm && !e.title.toLowerCase().includes(this.searchTerm))
         return false;
 

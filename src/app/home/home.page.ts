@@ -1,6 +1,7 @@
 import { Component, OnInit } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { FormsModule } from '@angular/forms';
+import { Router } from '@angular/router';
 import {
   IonContent,
   IonHeader,
@@ -10,7 +11,7 @@ import {
   IonButton,
   IonIcon,
   IonAvatar,
-  IonText,
+  IonSearchbar,
   ToastController,
   ModalController,
 } from '@ionic/angular/standalone';
@@ -54,12 +55,12 @@ import { CommentsModalComponent } from '../components/comments-modal/comments-mo
     IonButtons,
     IonIcon,
     IonAvatar,
-    IonAvatar,
+    IonSearchbar,
     IonButton,
   ],
 })
 export class HomePage implements OnInit {
-  // Feed Items (Mixed Content: Posts, Events, Deals)
+  searchQuery = '';
 
   // Unified Feed Data
   feedItems: any[] = [
@@ -143,7 +144,8 @@ export class HomePage implements OnInit {
 
   constructor(
     private toastCtrl: ToastController,
-    private modalCtrl: ModalController
+    private modalCtrl: ModalController,
+    private router: Router
   ) {
     addIcons({
       notificationsOutline,
@@ -210,6 +212,23 @@ export class HomePage implements OnInit {
       color: 'dark', // Minimalist toast
     });
     toast.present();
+  }
+
+  onSearch(event: any) {
+    const query = event.target.value.toLowerCase();
+    console.log('Searching for:', query);
+    // TODO: Implement search functionality
+  }
+
+  navigateToProfile(item: any) {
+    // Navigate to profile based on type
+    const profileId = item.type === 'post' ? item.user : item.name;
+    this.router.navigate(['/profile'], {
+      queryParams: {
+        id: profileId,
+        type: item.type,
+      },
+    });
   }
 
   openNotifications() {

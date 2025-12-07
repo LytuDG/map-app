@@ -135,6 +135,26 @@
   }
 }
 
+// Search Section
+.search-section {
+  padding-top: 12px;
+  padding-bottom: 8px;
+
+  .custom-searchbar {
+    --background: #f5f5f5;
+    --border-radius: 12px;
+    --box-shadow: none;
+    --placeholder-color: #999;
+    --icon-color: #666;
+    padding: 0;
+
+    &::part(native) {
+      padding-inline-start: 12px;
+      padding-inline-end: 12px;
+    }
+  }
+}
+
 // Unified Feed Card Styling
 .feed-list {
   display: flex;
@@ -227,6 +247,11 @@
           font-size: 16px;
           color: #1a1a1a;
           margin-bottom: 2px;
+          cursor: pointer;
+
+          &:hover {
+            opacity: 0.7;
+          }
         }
 
         .location-label {

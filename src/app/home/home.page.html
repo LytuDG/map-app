@@ -36,6 +36,13 @@
 <ion-content [fullscreen]="true" class="ion-padding-bottom">
 
   <div class="content-wrapper">
+    <!-- Search Bar -->
+    <div class="search-section ion-padding-horizontal">
+      <ion-searchbar placeholder="Buscar usuarios, lugares, eventos..." [(ngModel)]="searchQuery"
+        (ionInput)="onSearch($event)" mode="ios" class="custom-searchbar">
+      </ion-searchbar>
+    </div>
+
     <!-- Feed List -->
     <div class="feed-list ion-padding-horizontal ion-padding-top">
 
@@ -64,7 +71,8 @@
 
           <div class="header-row">
             <div class="main-info">
-              <span class="username">{{ item.type === 'post' ? item.user : item.name }}</span>
+              <span class="username" (click)="navigateToProfile(item)">{{ item.type === 'post' ? item.user : item.name
+                }}</span>
               <span class="location-label">
                 <ion-icon name="location-sharp"></ion-icon>
                 {{ item.type === 'post' ? item.location : item.category }}
