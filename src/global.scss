@@ -35,3 +35,13 @@
 /* @import "@ionic/angular/css/palettes/dark.always.css"; */
 /* @import "@ionic/angular/css/palettes/dark.class.css"; */
 @import '@ionic/angular/css/palettes/dark.system.css';
+
+// Custom Modal Styles
+.create-content-modal {
+    --height: 90%;
+    --border-radius: 20px 20px 0 0;
+
+    ion-modal {
+        --background: #f8f8f8;
+    }
+}

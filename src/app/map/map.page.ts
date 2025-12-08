@@ -1,6 +1,6 @@
 import { Component } from '@angular/core';
 import { CommonModule } from '@angular/common';
-import { Router } from '@angular/router';
+import { Router, ActivatedRoute } from '@angular/router';
 import {
   IonContent,
   IonSearchbar,
@@ -108,7 +108,7 @@ export class MapPage {
     },
   ];
 
-  constructor(private router: Router) {
+  constructor(private router: Router, private route: ActivatedRoute) {
     addIcons({
       locateOutline,
       listOutline,
@@ -134,8 +134,16 @@ export class MapPage {
   }
 
   goToProfile() {
-    // Navigate to profile. In a real app we would pass the ID.
-    // For this demo, ProfilePage automatically shows "Lumina Coffee" if isBusiness is true.
-    this.router.navigate(['/tabs/profile']);
+    if (this.selectedPlace) {
+      // Navigate to business profile with place information
+      this.router.navigate(['../profile'], {
+        relativeTo: this.route,
+        queryParams: {
+          id: this.selectedPlace.name,
+          type: 'business',
+          itemType: 'place',
+        },
+      });
+    }
   }
 }

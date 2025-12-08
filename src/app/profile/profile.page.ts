@@ -1,6 +1,7 @@
 import { Component, OnInit } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { FormsModule } from '@angular/forms';
+import { ActivatedRoute } from '@angular/router';
 import {
   IonContent,
   IonHeader,
@@ -151,7 +152,7 @@ export class ProfilePage implements OnInit {
 
   filteredMenu = [...this.businessProfile.menu];
 
-  constructor() {
+  constructor(private route: ActivatedRoute) {
     addIcons({
       settingsOutline,
       shareSocialOutline,
@@ -166,7 +167,26 @@ export class ProfilePage implements OnInit {
     });
   }
 
-  ngOnInit() {}
+  ngOnInit() {
+    // Read queryParams to determine profile type
+    this.route.queryParams.subscribe((params) => {
+      const profileType = params['type'];
+      const profileId = params['id'];
+      const itemType = params['itemType'];
+
+      console.log('Profile params:', { profileType, profileId, itemType });
+
+      // Set isBusiness based on type parameter
+      if (profileType === 'business') {
+        this.isBusiness = true;
+      } else if (profileType === 'user') {
+        this.isBusiness = false;
+      }
+
+      // TODO: Load actual profile data based on profileId
+      // For now, we use the demo data
+    });
+  }
 
   toggleType() {
     this.isBusiness = !this.isBusiness;

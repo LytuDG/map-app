@@ -1,0 +1,162 @@
+<ion-header class="ion-no-border">
+  <ion-toolbar>
+    <ion-title>Crear Contenido</ion-title>
+    <ion-buttons slot="end">
+      <ion-button (click)="dismiss()" class="close-btn">
+        <lucide-icon [img]="X" [size]="24"></lucide-icon>
+      </ion-button>
+    </ion-buttons>
+  </ion-toolbar>
+</ion-header>
+
+<ion-content class="ion-padding">
+
+  <!-- Content Type Selector -->
+  <div class="type-selector">
+    <button class="type-btn" [class.active]="contentType === 'post'" (click)="setContentType('post')">
+      <lucide-icon [img]="FileText" [size]="24" [strokeWidth]="2" class="type-icon"></lucide-icon>
+      <span class="type-label">Post</span>
+    </button>
+    <button class="type-btn" [class.active]="contentType === 'event'" (click)="setContentType('event')">
+      <lucide-icon [img]="CalendarDays" [size]="24" [strokeWidth]="2" class="type-icon"></lucide-icon>
+      <span class="type-label">Evento</span>
+    </button>
+    <button class="type-btn" [class.active]="contentType === 'deal'" (click)="setContentType('deal')">
+      <lucide-icon [img]="BadgePercent" [size]="24" [strokeWidth]="2" class="type-icon"></lucide-icon>
+      <span class="type-label">Oferta</span>
+    </button>
+  </div>
+
+  <!-- POST FORM -->
+  <div *ngIf="contentType === 'post'" class="content-form">
+    <ion-card>
+      <ion-card-content>
+        <ion-textarea [(ngModel)]="postText" placeholder="¿Qué estás pensando?" rows="6" class="custom-textarea"
+          [autoGrow]="true">
+        </ion-textarea>
+
+        <div *ngIf="postImage" class="image-preview">
+          <img [src]="postImage" alt="Preview">
+          <button class="remove-img" (click)="postImage = null">
+            <lucide-icon [img]="X" [size]="20"></lucide-icon>
+          </button>
+        </div>
+
+        <div class="form-actions">
+          <label class="action-btn">
+            <lucide-icon [img]="ImageIcon" [size]="20" [strokeWidth]="2"></lucide-icon>
+            <span>Foto</span>
+            <input type="file" accept="image/*" (change)="handleImageUpload($event)" hidden>
+          </label>
+
+          <div class="location-input-wrapper">
+            <lucide-icon [img]="MapPin" [size]="18" [strokeWidth]="2" class="input-icon"></lucide-icon>
+            <input type="text" [(ngModel)]="postLocation" placeholder="Agregar ubicación" class="location-input">
+          </div>
+        </div>
+      </ion-card-content>
+    </ion-card>
+  </div>
+
+  <!-- EVENT FORM -->
+  <div *ngIf="contentType === 'event'" class="content-form">
+    <ion-card>
+      <ion-card-content>
+        <input type="text" [(ngModel)]="eventTitle" placeholder="Título del evento *" class="title-input">
+
+        <ion-textarea [(ngModel)]="eventDescription" placeholder="Descripción del evento" rows="4"
+          class="custom-textarea" [autoGrow]="true">
+        </ion-textarea>
+
+        <div *ngIf="eventImage" class="image-preview">
+          <img [src]="eventImage" alt="Preview">
+          <button class="remove-img" (click)="eventImage = null">
+            <lucide-icon [img]="X" [size]="20"></lucide-icon>
+          </button>
+        </div>
+
+        <div class="form-row">
+          <div class="input-group">
+            <lucide-icon [img]="Calendar" [size]="18" [strokeWidth]="2" class="input-icon"></lucide-icon>
+            <input type="date" [(ngModel)]="eventDate" placeholder="Fecha *" class="form-input">
+          </div>
+
+          <div class="input-group">
+            <lucide-icon [img]="Clock" [size]="18" [strokeWidth]="2" class="input-icon"></lucide-icon>
+            <input type="time" [(ngModel)]="eventTime" placeholder="Hora" class="form-input">
+          </div>
+        </div>
+
+        <div class="input-group">
+          <lucide-icon [img]="MapPin" [size]="18" [strokeWidth]="2" class="input-icon"></lucide-icon>
+          <input type="text" [(ngModel)]="eventLocation" placeholder="Ubicación" class="form-input">
+        </div>
+
+        <div class="input-group">
+          <lucide-icon [img]="Tag" [size]="18" [strokeWidth]="2" class="input-icon"></lucide-icon>
+          <input type="text" [(ngModel)]="eventPrice" placeholder="Precio (opcional)" class="form-input">
+        </div>
+
+        <div class="form-actions">
+          <label class="action-btn">
+            <lucide-icon [img]="ImageIcon" [size]="20" [strokeWidth]="2"></lucide-icon>
+            <span>Imagen del evento</span>
+            <input type="file" accept="image/*" (change)="handleImageUpload($event)" hidden>
+          </label>
+        </div>
+      </ion-card-content>
+    </ion-card>
+  </div>
+
+  <!-- DEAL FORM -->
+  <div *ngIf="contentType === 'deal'" class="content-form">
+    <ion-card>
+      <ion-card-content>
+        <input type="text" [(ngModel)]="dealTitle" placeholder="Título de la oferta *" class="title-input">
+
+        <ion-textarea [(ngModel)]="dealDescription" placeholder="Descripción de la oferta" rows="4"
+          class="custom-textarea" [autoGrow]="true">
+        </ion-textarea>
+
+        <div *ngIf="dealImage" class="image-preview">
+          <img [src]="dealImage" alt="Preview">
+          <button class="remove-img" (click)="dealImage = null">
+            <lucide-icon [img]="X" [size]="20"></lucide-icon>
+          </button>
+        </div>
+
+        <div class="form-row">
+          <div class="input-group">
+            <lucide-icon [img]="Tag" [size]="18" [strokeWidth]="2" class="input-icon"></lucide-icon>
+            <input type="number" [(ngModel)]="dealPrice" placeholder="Precio oferta *" class="form-input">
+          </div>
+
+          <div class="input-group">
+            <lucide-icon [img]="Percent" [size]="18" [strokeWidth]="2" class="input-icon"></lucide-icon>
+            <input type="number" [(ngModel)]="dealOriginalPrice" placeholder="Precio original" class="form-input">
+          </div>
+        </div>
+
+        <div class="input-group">
+          <lucide-icon [img]="MapPin" [size]="18" [strokeWidth]="2" class="input-icon"></lucide-icon>
+          <input type="text" [(ngModel)]="dealLocation" placeholder="Ubicación" class="form-input">
+        </div>
+
+        <div class="form-actions">
+          <label class="action-btn">
+            <lucide-icon [img]="ImageIcon" [size]="20" [strokeWidth]="2"></lucide-icon>
+            <span>Imagen de la oferta</span>
+            <input type="file" accept="image/*" (change)="handleImageUpload($event)" hidden>
+          </label>
+        </div>
+      </ion-card-content>
+    </ion-card>
+  </div>
+
+  <!-- Publish Button -->
+  <button class="publish-btn" (click)="publish()">
+    <lucide-icon [img]="Send" [size]="20" [strokeWidth]="2"></lucide-icon>
+    <span>Publicar</span>
+  </button>
+
+</ion-content>
