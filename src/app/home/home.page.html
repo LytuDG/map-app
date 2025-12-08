@@ -71,20 +71,24 @@
 
           <div class="header-row">
             <div class="main-info">
-              <span class="username" (click)="navigateToProfile(item)">{{ item.type === 'post' ? item.user : item.name
-                }}</span>
+              <!-- Name: Handle 'post' (user), 'event' (title), others (name) -->
+              <span class="username" (click)="navigateToProfile(item)">
+                {{ item.type === 'post' ? item.user : (item.type === 'event' ? item.title : item.name) }}
+              </span>
+              <!-- Subtitle: Handle 'post'/'event' (location), others (category) -->
               <span class="location-label">
                 <ion-icon name="location-sharp"></ion-icon>
-                {{ item.type === 'post' ? item.location : item.category }}
+                {{ (item.type === 'post' || item.type === 'event') ? item.location : item.category }}
               </span>
             </div>
 
             <!-- Minimal Actions -->
             <div class="mini-actions">
-              <ion-button fill="clear" size="small" class="icon-only" (click)="toggleLike(item)">
+              <ion-button fill="clear" size="small" class="icon-only no-ripple-border" (click)="toggleLike(item)">
                 <ion-icon [name]="item.liked ? 'heart' : 'heart-outline'" [class.liked]="item.liked"></ion-icon>
               </ion-button>
-              <ion-button fill="clear" size="small" class="icon-only" (click)="handleAction('share')">
+              <ion-button fill="clear" size="small" class="icon-only no-ripple-border"
+                (click)="handleAction(item, 'share')">
                 <ion-icon name="paper-plane-outline"></ion-icon>
               </ion-button>
             </div>
@@ -96,15 +100,25 @@
 
           <!-- CTA / Footer -->
           <div class="footer-row" *ngIf="item.type !== 'post'">
-            <ion-button expand="block" fill="outline" shape="round" size="small" class="action-btn"
-              (click)="item.type === 'event' ? toggleJoin(item) : handleAction('click_cta')">
-              {{ item.actionLabel || 'Ver Detalles' }}
+            <ion-button expand="block" [fill]="(item.going || item.claimed) ? 'solid' : 'outline'" shape="round"
+              size="small" class="action-btn" [color]="(item.going || item.claimed) ? 'success' : 'primary'"
+              (click)="handleAction(item)">
+              <!-- Dynamic Label Logic -->
+              <ng-container *ngIf="item.type === 'event'">
+                {{ item.going ? 'Asistiendo' : (item.actionLabel || 'Asistiré') }}
+              </ng-container>
+              <ng-container *ngIf="item.type === 'deal'">
+                {{ item.claimed ? 'Reclamado' : (item.actionLabel || 'Reclamar') }}
+              </ng-container>
+              <ng-container *ngIf="item.type === 'business'">
+                {{ item.actionLabel || 'Más Info' }}
+              </ng-container>
             </ion-button>
           </div>
 
           <div class="footer-row post-footer" *ngIf="item.type === 'post'">
             <span class="likes-text" *ngIf="item.likes">{{ item.likes }} likes</span>
-            <span class="comments-text" (click)="handleAction('comment')">Ver comentarios</span>
+            <span class="comments-text" (click)="handleAction(item, 'comment')">Ver comentarios</span>
           </div>
 
         </div>

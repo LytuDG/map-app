@@ -39,6 +39,7 @@ import {
   ticketOutline,
   checkmarkCircleOutline,
   arrowRedoOutline,
+  locationSharp,
 } from 'ionicons/icons';
 import { CommentsModalComponent } from '../components/comments-modal/comments-modal.component';
 import { FeedService } from '../services/feed.service';
@@ -84,10 +85,11 @@ export class HomePage implements OnInit {
   ) {
     addIcons({
       notificationsOutline,
+      locationSharp,
+      paperPlaneOutline,
       chatbubbleOutline,
       heart,
       heartOutline,
-      paperPlaneOutline,
       ellipsisHorizontal,
       locationOutline,
       star,
@@ -127,9 +129,11 @@ export class HomePage implements OnInit {
   async share(item: any) {
     const toast = await this.toastCtrl.create({
       message: 'Compartido en tu perfil',
-      duration: 2000,
+      duration: 1500,
       color: 'dark',
       icon: 'arrow-redo-outline',
+      position: 'bottom',
+      cssClass: 'minimal-toast', // Use a custom class if we want to style it smaller later, but standard is fine for share
     });
     await toast.present();
   }
@@ -150,30 +154,30 @@ export class HomePage implements OnInit {
     await toast.present();
   }
 
-  handleAction(item: any) {
+  handleAction(item: any, type?: string) {
+    if (type === 'share') {
+      this.share(item);
+      return;
+    }
+
+    if (type === 'comment') {
+      this.openComments(item);
+      return;
+    }
+
+    // Main action button logic
     if (item.type === 'event') {
       this.toggleJoin(item);
     } else if (item.type === 'deal') {
-      this.toastCtrl
-        .create({
-          message:
-            '¡Oferta reclamada! Muestra este código: ' +
-            Math.random().toString(36).substr(2, 6).toUpperCase(),
-          duration: 3000,
-          color: 'success',
-          icon: 'ticket-outline',
-          position: 'bottom',
-        })
-        .then((t) => t.present());
+      // Minimalist Claim Action
+      item.claimed = !item.claimed;
+      // No toast, just immediate UI feedback via the button state in template
+    } else if (item.type === 'business') {
+      // Navigate to business profile
+      this.navigateToProfile(item);
     } else {
-      // Business action
-      this.toastCtrl
-        .create({
-          message: 'Redirigiendo a ' + item.actionLabel + '...',
-          duration: 2000,
-          position: 'bottom',
-        })
-        .then((t) => t.present());
+      // Fallback
+      console.log('Action for item:', item);
     }
   }
 
@@ -181,14 +185,7 @@ export class HomePage implements OnInit {
     item.going = !item.going;
     if (item.going) {
       item.attendees++;
-      this.toastCtrl
-        .create({
-          message: '¡Te has apuntado al evento!',
-          duration: 2000,
-          color: 'success',
-          icon: 'checkmark-circle-outline',
-        })
-        .then((t) => t.present());
+      // Minimalist: No toast, just state update
     } else {
       item.attendees--;
     }
