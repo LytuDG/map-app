@@ -1,0 +1,43 @@
+<ion-header class="ion-no-border">
+    <ion-toolbar color="white">
+        <ion-buttons slot="start">
+            <ion-button (click)="goBack()">
+                <ion-icon name="chevron-back-outline" size="large"></ion-icon>
+            </ion-button>
+        </ion-buttons>
+        <ion-title class="username-title">Mensajes</ion-title>
+        <ion-buttons slot="end">
+            <ion-button>
+                <ion-icon name="create-outline" style="font-size: 24px;"></ion-icon>
+            </ion-button>
+        </ion-buttons>
+    </ion-toolbar>
+</ion-header>
+
+<ion-content color="light">
+    <div class="search-container">
+        <div class="search-box">
+            <ion-icon name="search-outline"></ion-icon>
+            <input type="text" placeholder="Buscar">
+        </div>
+    </div>
+
+    <div class="messages-list">
+        <div class="message-item" *ngFor="let chat of conversations" button ripple="true">
+            <div class="avatar-wrapper">
+                <img [src]="chat.avatar" [alt]="chat.name">
+            </div>
+
+            <div class="message-content">
+                <div class="top-row">
+                    <span class="name">{{ chat.name }}</span>
+                    <span class="time">{{ chat.time }}</span>
+                </div>
+                <div class="bottom-row">
+                    <p [class.unread]="chat.unread">{{ chat.lastMessage }}</p>
+                </div>
+            </div>
+            <div class="unread-dot" *ngIf="chat.unread"></div>
+        </div>
+    </div>
+</ion-content>

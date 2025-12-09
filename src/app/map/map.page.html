@@ -24,14 +24,25 @@
         </div>
 
         <!-- Dynamic Map Background with Pins -->
+        <!-- Simulating a "Street Level / 3D Map" vibe using a high quality static image or gradient -->
+        <!-- We will use a mock background that looks like a 3D perspective map -->
         <div class="map-bg" (click)="closePreview()">
+            <!-- Mock Map Image Layer -->
+            <div class="mock-map-layer"></div>
+
+            <div class="user-position-marker">
+                <div class="pulse-ring"></div>
+                <div class="user-dot"></div>
+            </div>
+
             <div class="map-pin" *ngFor="let p of places" [style.top]="p.top" [style.left]="p.left"
                 [style.--pin-color]="p.color" (click)="$event.stopPropagation(); selectPlace(p)"
                 [class.selected]="selectedPlace === p">
                 <div class="pin-icon">
                     <ion-icon [name]="p.icon"></ion-icon>
                 </div>
-                <div class="pin-pulse"></div>
+                <!-- Little shadow for depth -->
+                <div class="pin-shadow"></div>
             </div>
         </div>
 

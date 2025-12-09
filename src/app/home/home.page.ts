@@ -40,8 +40,10 @@ import {
   checkmarkCircleOutline,
   arrowRedoOutline,
   locationSharp,
+  chatbubbleEllipsesOutline,
 } from 'ionicons/icons';
 import { CommentsModalComponent } from '../components/comments-modal/comments-modal.component';
+import { NotificationsModalComponent } from '../components/notifications-modal/notifications-modal.component';
 import { FeedService } from '../services/feed.service';
 
 @Component({
@@ -84,12 +86,13 @@ export class HomePage implements OnInit {
     private feedService: FeedService
   ) {
     addIcons({
-      notificationsOutline,
+      heartOutline,
+      chatbubbleEllipsesOutline,
       locationSharp,
       paperPlaneOutline,
+      notificationsOutline,
       chatbubbleOutline,
       heart,
-      heartOutline,
       ellipsisHorizontal,
       locationOutline,
       star,
@@ -145,13 +148,16 @@ export class HomePage implements OnInit {
   }
 
   async openNotifications() {
-    const toast = await this.toastCtrl.create({
-      message: 'No tienes notificaciones nuevas',
-      duration: 2000,
-      color: 'dark',
-      icon: 'notifications-outline',
+    const modal = await this.modalCtrl.create({
+      component: NotificationsModalComponent,
+      breakpoints: [0, 0.75, 1],
+      initialBreakpoint: 0.75,
     });
-    await toast.present();
+    await modal.present();
+  }
+
+  goToMessages() {
+    this.router.navigate(['/messages']);
   }
 
   handleAction(item: any, type?: string) {

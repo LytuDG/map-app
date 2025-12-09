@@ -1,332 +1,279 @@
-// Header
+// Minimalist Redesign for Create Content Modal
+
 ion-header {
     ion-toolbar {
-        --background: white;
-        --border-width: 0;
+        --background: #fff;
+        --border-width: 0.5px;
+        --border-color: rgba(0, 0, 0, 0.1);
         padding-top: env(safe-area-inset-top);
-        padding-bottom: 8px;
 
         ion-title {
-            font-weight: 700;
-            font-size: 20px;
-            color: #1a1a1a;
-            letter-spacing: -0.5px;
+            font-weight: 600;
+            font-size: 16px;
+            letter-spacing: -0.3px;
         }
 
         .close-btn {
-            --color: #666;
-            --padding-start: 8px;
-            --padding-end: 8px;
-
-            &:hover {
-                --color: #1a1a1a;
-            }
+            --color: #000;
         }
     }
 }
 
 ion-content {
-    --background: #fafafa;
+    --background: #fff;
+    --padding-top: 16px;
+    --padding-start: 16px;
+    --padding-end: 16px;
 }
 
-// Type Selector
+// 1. Sleek Type Switcher (Segment-like but cleaner)
 .type-selector {
     display: flex;
-    gap: 10px;
+    justify-content: center;
+    gap: 24px;
     margin-bottom: 24px;
-    padding: 0;
+    border-bottom: 1px solid #f0f0f0;
+    padding-bottom: 12px;
 
     .type-btn {
-        flex: 1;
+        background: none;
+        border: none;
         display: flex;
         flex-direction: column;
         align-items: center;
-        gap: 10px;
-        padding: 18px 12px;
-        border: 2px solid transparent;
-        border-radius: 16px;
-        background: white;
+        gap: 6px;
         cursor: pointer;
-        transition: all 0.25s cubic-bezier(0.4, 0, 0.2, 1);
-        box-shadow: 0 1px 3px rgba(0, 0, 0, 0.04);
+        opacity: 0.4;
+        transition: all 0.3s ease;
+        padding: 0 8px;
 
         .type-icon {
-            color: #666;
-            transition: color 0.25s;
+            color: #000;
+            transition: transform 0.2s;
         }
 
         .type-label {
-            font-size: 13px;
-            font-weight: 600;
-            color: #666;
-            letter-spacing: -0.2px;
-            transition: color 0.25s;
-        }
-
-        &:hover {
-            transform: translateY(-2px);
-            box-shadow: 0 4px 12px rgba(0, 0, 0, 0.08);
+            font-size: 11px;
+            font-weight: 500;
+            letter-spacing: 0.3px;
+            text-transform: uppercase;
         }
 
         &.active {
-            background: #1a1a1a;
-            border-color: #1a1a1a;
-            box-shadow: 0 4px 16px rgba(0, 0, 0, 0.15);
+            opacity: 1;
+            transform: translateY(-2px);
 
             .type-icon {
-                color: white;
+                // transform: scale(1.1);
             }
 
             .type-label {
-                color: white;
+                font-weight: 700;
+            }
+
+            // tiny active dot
+            &::after {
+                content: '';
+                display: block;
+                width: 4px;
+                height: 4px;
+                background: #000;
+                border-radius: 50%;
+                margin-top: 4px;
             }
         }
     }
 }
 
-// Content Form
+// 2. Clean Form Area
 .content-form {
+    animation: fadeIn 0.3s ease;
+
     ion-card {
-        margin: 0 0 24px 0;
-        border-radius: 20px;
-        box-shadow: 0 2px 8px rgba(0, 0, 0, 0.04);
-        border: 1px solid #f0f0f0;
+        background: transparent;
+        box-shadow: none;
+        border: none;
+        margin: 0;
 
         ion-card-content {
-            padding: 20px;
+            padding: 0;
         }
     }
 
-    // Title Input
+    // Minimal inputs
     .title-input {
+        display: block;
         width: 100%;
-        font-size: 20px;
-        font-weight: 700;
-        color: #1a1a1a;
         border: none;
         outline: none;
-        padding: 0 0 16px 0;
-        margin-bottom: 16px;
-        border-bottom: 2px solid #f0f0f0;
+        font-size: 22px;
+        font-weight: 700;
+        color: #000;
+        margin-bottom: 12px;
+        padding: 0;
+        background: transparent;
         letter-spacing: -0.5px;
 
         &::placeholder {
             color: #ccc;
         }
-
-        &:focus {
-            border-bottom-color: #1a1a1a;
-        }
     }
 
-    // Textarea
     .custom-textarea {
-        --padding-start: 0;
-        --padding-end: 0;
-        --padding-top: 0;
-        --padding-bottom: 16px;
-        font-size: 15px;
-        line-height: 1.6;
+        display: block;
+        width: 100%;
+        border: none;
+        outline: none;
+        font-size: 16px;
+        line-height: 1.5;
         color: #333;
-        margin-bottom: 16px;
+        min-height: 100px;
+        margin-bottom: 20px;
+        background: transparent;
+        resize: none;
+        font-family: inherit;
 
-        &::part(native) {
-            padding: 0;
+        &::placeholder {
+            color: #999;
+            font-weight: 400;
         }
     }
 
-    // Input Group
+    // Compact Input Groups
+    .form-row {
+        display: flex;
+        gap: 12px;
+    }
+
     .input-group {
         display: flex;
         align-items: center;
-        gap: 12px;
-        padding: 14px 16px;
-        background: #f8f8f8;
-        border-radius: 12px;
-        margin-bottom: 12px;
-        transition: all 0.2s;
+        gap: 10px;
+        padding: 12px 0;
+        border-bottom: 1px solid #f0f0f0;
+        transition: border-color 0.2s;
 
         &:focus-within {
-            background: #f0f0f0;
-            box-shadow: 0 0 0 2px #1a1a1a;
+            border-bottom-color: #000;
         }
 
         .input-icon {
             color: #999;
-            flex-shrink: 0;
+            width: 18px;
+            height: 18px;
         }
 
         .form-input {
-            flex: 1;
             border: none;
             outline: none;
+            flex: 1;
+            font-size: 14px;
+            color: #000;
             background: transparent;
-            font-size: 15px;
-            color: #1a1a1a;
 
             &::placeholder {
-                color: #999;
-            }
-        }
-    }
-
-    // Form Row
-    .form-row {
-        display: flex;
-        gap: 12px;
-        margin-bottom: 12px;
-
-        .input-group {
-            flex: 1;
-            margin-bottom: 0;
-        }
-    }
-
-    // Form Actions
-    .form-actions {
-        display: flex;
-        gap: 12px;
-        align-items: center;
-        margin-top: 16px;
-        padding-top: 16px;
-        border-top: 1px solid #f0f0f0;
-
-        .action-btn {
-            display: flex;
-            align-items: center;
-            gap: 8px;
-            padding: 10px 16px;
-            background: #f8f8f8;
-            border-radius: 10px;
-            cursor: pointer;
-            transition: all 0.2s;
-            border: none;
-
-            &:hover {
-                background: #eee;
-                transform: translateY(-1px);
-            }
-
-            lucide-icon {
-                color: #666;
-            }
-
-            span {
-                font-size: 14px;
-                font-weight: 600;
-                color: #666;
-            }
-        }
-
-        .location-input-wrapper {
-            flex: 1;
-            display: flex;
-            align-items: center;
-            gap: 10px;
-            padding: 10px 14px;
-            background: #f8f8f8;
-            border-radius: 10px;
-            transition: all 0.2s;
-
-            &:focus-within {
-                background: #f0f0f0;
-                box-shadow: 0 0 0 2px #1a1a1a;
-            }
-
-            .input-icon {
-                color: #999;
-                flex-shrink: 0;
-            }
-
-            .location-input {
-                flex: 1;
-                border: none;
-                outline: none;
-                background: transparent;
-                font-size: 14px;
-                color: #1a1a1a;
-
-                &::placeholder {
-                    color: #999;
-                }
-            }
-        }
-    }
-
-    // Image Preview
-    .image-preview {
-        position: relative;
-        margin-bottom: 16px;
-        border-radius: 16px;
-        overflow: hidden;
-        box-shadow: 0 4px 12px rgba(0, 0, 0, 0.08);
-
-        img {
-            width: 100%;
-            height: auto;
-            display: block;
-        }
-
-        .remove-img {
-            position: absolute;
-            top: 12px;
-            right: 12px;
-            width: 36px;
-            height: 36px;
-            border-radius: 50%;
-            background: rgba(0, 0, 0, 0.75);
-            backdrop-filter: blur(10px);
-            color: white;
-            border: none;
-            cursor: pointer;
-            display: flex;
-            align-items: center;
-            justify-content: center;
-            transition: all 0.2s;
-
-            &:hover {
-                background: rgba(0, 0, 0, 0.9);
-                transform: scale(1.1);
-            }
-
-            lucide-icon {
-                color: white;
+                color: #aaa;
             }
         }
     }
 }
 
-// Publish Button
-.publish-btn {
-    width: 100%;
-    display: flex;
-    align-items: center;
-    justify-content: center;
-    gap: 10px;
-    padding: 16px 24px;
-    background: #1a1a1a;
-    color: white;
-    border: none;
-    border-radius: 14px;
-    font-size: 16px;
-    font-weight: 700;
-    cursor: pointer;
-    transition: all 0.25s cubic-bezier(0.4, 0, 0.2, 1);
-    box-shadow: 0 4px 12px rgba(0, 0, 0, 0.15);
-    letter-spacing: -0.3px;
+// 3. Media Preview (Cleaner)
+.image-preview {
+    margin: 16px 0;
+    position: relative;
+    border-radius: 12px;
+    overflow: hidden;
+    background: #f7f7f7;
 
-    &:hover {
-        background: #2d2d2d;
-        transform: translateY(-2px);
-        box-shadow: 0 6px 20px rgba(0, 0, 0, 0.2);
+    img {
+        width: 100%;
+        display: block;
+        max-height: 250px;
+        object-fit: cover;
     }
+
+    .remove-img {
+        position: absolute;
+        top: 10px;
+        right: 10px;
+        background: rgba(0, 0, 0, 0.6);
+        border: none;
+        border-radius: 50%;
+        width: 30px;
+        height: 30px;
+        color: #fff;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        cursor: pointer;
+    }
+}
+
+// 4. Action Bar (Bottom Tools)
+.form-actions {
+    display: flex;
+    gap: 16px;
+    margin-top: 24px;
+
+    .action-btn {
+        display: flex;
+        align-items: center;
+        gap: 8px;
+        padding: 8px 12px;
+        border-radius: 20px;
+        background: #f9f9f9;
+        cursor: pointer;
+        transition: background 0.2s;
+
+        &:hover {
+            background: #f0f0f0;
+        }
+
+        lucide-icon {
+            color: #555;
+        }
+
+        span {
+            font-size: 13px;
+            font-weight: 500;
+            color: #555;
+        }
+    }
+}
+
+// 5. Publish Button (Fixed at bottom or floating)
+.publish-btn {
+    margin-top: 32px;
+    width: 100%;
+    background: #000;
+    color: #fff;
+    border: none;
+    padding: 16px;
+    border-radius: 30px;
+    font-size: 15px;
+    font-weight: 600;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    gap: 8px;
+    cursor: pointer;
+    box-shadow: 0 4px 14px rgba(0, 0, 0, 0.15);
+    transition: transform 0.2s;
 
     &:active {
-        transform: translateY(0);
-        box-shadow: 0 2px 8px rgba(0, 0, 0, 0.15);
+        transform: scale(0.98);
+    }
+}
+
+@keyframes fadeIn {
+    from {
+        opacity: 0;
+        transform: translateY(5px);
     }
 
-    lucide-icon {
-        color: white;
+    to {
+        opacity: 1;
+        transform: translateY(0);
     }
 }
