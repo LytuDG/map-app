@@ -49,9 +49,9 @@
             <input type="file" accept="image/*" (change)="handleImageUpload($event)" hidden>
           </label>
 
-          <div class="location-input-wrapper">
+          <div class="input-group">
             <lucide-icon [img]="MapPin" [size]="18" [strokeWidth]="2" class="input-icon"></lucide-icon>
-            <input type="text" [(ngModel)]="postLocation" placeholder="Agregar ubicación" class="location-input">
+            <input type="text" [(ngModel)]="postLocation" placeholder="Agregar ubicación" class="form-input">
           </div>
         </div>
       </ion-card-content>

@@ -353,5 +353,60 @@
         --box-shadow: none;
       }
     }
+
+    // Minimalist Footer Action Styles (Home Page)
+    .minimalist-action-row {
+      margin-top: 10px;
+      padding-top: 10px;
+      border-top: 1px solid #f2f2f2;
+      display: flex;
+      align-items: center;
+
+      .primary-action {
+        display: inline-flex;
+        align-items: center;
+        gap: 8px;
+        cursor: pointer;
+        padding: 6px 12px;
+        border-radius: 20px;
+        transition: all 0.3s cubic-bezier(0.175, 0.885, 0.32, 1.275);
+        background: transparent;
+
+        ion-icon {
+          font-size: 22px;
+          transition: transform 0.3s cubic-bezier(0.175, 0.885, 0.32, 1.275);
+        }
+
+        span {
+          font-size: 14px;
+          font-weight: 600;
+          color: #666;
+          transition: color 0.3s ease;
+
+          &.active {
+            color: var(--ion-color-success);
+          }
+        }
+
+        .info-link {
+          color: var(--ion-color-primary);
+        }
+
+        &:hover {
+          background: #f9f9f9;
+        }
+
+        &:active {
+          transform: scale(0.95);
+
+          ion-icon {
+            transform: scale(1.2);
+          }
+        }
+
+        // When active state matches (e.g. going=true)
+        // We can't strictly target .going here without class, but the span.active handles text color
+      }
+    }
   }
 }

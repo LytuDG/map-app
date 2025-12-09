@@ -41,7 +41,7 @@ export class MessagesPage implements OnInit {
       id: 3,
       name: 'Jazz & Blues Club',
       avatar:
-        'https://images.unsplash.com/photo-1514525253440-b39345208668?auto=format&fit=crop&q=80&w=100',
+        'https://images.unsplash.com/photo-1415201364774-f6f0bb35f28f?auto=format&fit=crop&q=80&w=100',
       lastMessage: 'Gracias por reservar tus entradas.',
       time: '3h',
       unread: false,

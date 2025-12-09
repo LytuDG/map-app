@@ -103,21 +103,25 @@
           </div>
 
           <!-- CTA / Footer -->
-          <div class="footer-row" *ngIf="item.type !== 'post'">
-            <ion-button expand="block" [fill]="(item.going || item.claimed) ? 'solid' : 'outline'" shape="round"
-              size="small" class="action-btn" [color]="(item.going || item.claimed) ? 'success' : 'primary'"
-              (click)="handleAction(item)">
-              <!-- Dynamic Label Logic -->
+          <div class="footer-row minimalist-action-row" *ngIf="item.type !== 'post'">
+            <!-- Business/Event Primary Action -->
+            <div class="primary-action" (click)="handleAction(item)">
               <ng-container *ngIf="item.type === 'event'">
-                {{ item.going ? 'Asistiendo' : (item.actionLabel || 'Asistiré') }}
+                <ion-icon [name]="item.going ? 'checkmark-circle' : 'calendar-outline'"
+                  [color]="item.going ? 'success' : 'medium'"></ion-icon>
+                <span [class.active]="item.going">{{ item.going ? 'Asistiendo' : 'Asistiré' }}</span>
               </ng-container>
+
               <ng-container *ngIf="item.type === 'deal'">
-                {{ item.claimed ? 'Reclamado' : (item.actionLabel || 'Reclamar') }}
+                <ion-icon [name]="item.claimed ? 'ticket' : 'ticket-outline'"
+                  [color]="item.claimed ? 'success' : 'medium'"></ion-icon>
+                <span [class.active]="item.claimed">{{ item.claimed ? 'Reclamado' : 'Reclamar' }}</span>
               </ng-container>
+
               <ng-container *ngIf="item.type === 'business'">
-                {{ item.actionLabel || 'Más Info' }}
+                <span class="info-link">Ver más</span>
               </ng-container>
-            </ion-button>
+            </div>
           </div>
 
           <div class="footer-row post-footer" *ngIf="item.type === 'post'">

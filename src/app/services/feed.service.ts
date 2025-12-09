@@ -39,7 +39,7 @@ export class FeedService {
       date: 'HOY, 20:00',
       location: 'Blue Velvet Club',
       userImg:
-        'https://images.unsplash.com/photo-1514525253440-b393452de23e?q=80&w=150',
+        'https://images.unsplash.com/photo-1415201364774-f6f0bb35f28f?auto=format&fit=crop&q=80&w=150',
       attendees: 120,
       img: 'https://images.unsplash.com/photo-1511192336575-5a79af67a629?q=80&w=800',
       going: false,
