@@ -1,7 +1,7 @@
 import { inject } from '@angular/core';
 import { Router, CanActivateFn } from '@angular/router';
 import { AuthService } from '../services/auth.service';
-import { map, take } from 'rxjs/operators';
+import { map, take, switchMap } from 'rxjs/operators';
 
 /**
  * Guard para proteger rutas que requieren autenticación
@@ -10,7 +10,8 @@ export const authGuard: CanActivateFn = () => {
   const authService = inject(AuthService);
   const router = inject(Router);
 
-  return authService.isAuthenticated().pipe(
+  return authService.waitForAuthReady().pipe(
+    switchMap(() => authService.isAuthenticated()),
     take(1),
     map((isAuthenticated) => {
       if (!isAuthenticated) {
@@ -30,7 +31,8 @@ export const publicGuard: CanActivateFn = () => {
   const authService = inject(AuthService);
   const router = inject(Router);
 
-  return authService.isAuthenticated().pipe(
+  return authService.waitForAuthReady().pipe(
+    switchMap(() => authService.isAuthenticated()),
     take(1),
     map((isAuthenticated) => {
       if (isAuthenticated) {

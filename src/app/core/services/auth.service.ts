@@ -18,8 +18,22 @@ import {
   serverTimestamp,
 } from '@angular/fire/firestore';
 import { Router } from '@angular/router';
-import { Observable, from, of, switchMap, map, catchError } from 'rxjs';
+import { Preferences } from '@capacitor/preferences';
+import {
+  BehaviorSubject,
+  Observable,
+  from,
+  of,
+  switchMap,
+  map,
+  catchError,
+  tap,
+  filter,
+  take,
+} from 'rxjs';
 import { User, CreateUserDto } from '../interfaces';
+
+const USER_STORAGE_KEY = 'user_session_data';
 
 @Injectable({
   providedIn: 'root',
@@ -29,20 +43,97 @@ export class AuthService {
   private firestore = inject(Firestore);
   private router = inject(Router);
 
-  // Observable del usuario autenticado de Firebase
-  user$ = user(this.auth);
+  // BehaviorSubject para mantener el estado actual del usuario
+  private currentUserSubject = new BehaviorSubject<User | null>(null);
 
-  // Observable del usuario completo con datos de Firestore
-  currentUser$: Observable<User | null> = this.user$.pipe(
-    switchMap((firebaseUser) => {
-      if (!firebaseUser) {
-        return of(null);
+  // Observable público del usuario
+  currentUser$ = this.currentUserSubject.asObservable();
+
+  // Observable del usuario autenticado de Firebase (interno)
+  private firebaseUser$ = user(this.auth);
+
+  // Estado de inicialización de la autenticación
+  private authStateReady = new BehaviorSubject<boolean>(false);
+
+  constructor() {
+    this.initUser();
+  }
+
+  private async initUser() {
+    try {
+      // 1. Intentar cargar usuario localmente para respuesta inmediata
+      const localUser = await this.loadUserLocally();
+      if (localUser) {
+        this.currentUserSubject.next(localUser);
       }
-      return this.getUserData(firebaseUser.uid);
-    })
-  );
+    } catch (error) {
+      console.error('Error init local user', error);
+    } finally {
+      // Marcar como listo después del chequeo local
+      this.authStateReady.next(true);
+    }
 
-  constructor() {}
+    // 2. Suscribirse a cambios de Firebase Auth para la fuente de verdad
+    this.firebaseUser$
+      .pipe(
+        switchMap((firebaseUser) => {
+          if (!firebaseUser) {
+            return of(null);
+          }
+          return this.getUserData(firebaseUser.uid);
+        })
+      )
+      .subscribe(async (user) => {
+        this.currentUserSubject.next(user);
+
+        if (user) {
+          await this.saveUserLocally(user);
+        } else {
+          await this.clearUserLocally();
+        }
+      });
+  }
+
+  /**
+   * Espera a que la autenticación inicial (carga local) termine
+   */
+  waitForAuthReady(): Observable<boolean> {
+    return this.authStateReady.asObservable().pipe(
+      filter((ready) => ready),
+      take(1)
+    );
+  }
+
+  // --- Local Storage Helpers ---
+
+  private async saveUserLocally(user: User): Promise<void> {
+    try {
+      await Preferences.set({
+        key: USER_STORAGE_KEY,
+        value: JSON.stringify(user),
+      });
+    } catch (error) {
+      console.error('Error saving user locally:', error);
+    }
+  }
+
+  private async loadUserLocally(): Promise<User | null> {
+    try {
+      const { value } = await Preferences.get({ key: USER_STORAGE_KEY });
+      return value ? JSON.parse(value) : null;
+    } catch (error) {
+      console.error('Error loading user locally:', error);
+      return null;
+    }
+  }
+
+  private async clearUserLocally(): Promise<void> {
+    try {
+      await Preferences.remove({ key: USER_STORAGE_KEY });
+    } catch (error) {
+      console.error('Error clearing local user:', error);
+    }
+  }
 
   /**
    * Registra un nuevo usuario con email y contraseña
@@ -198,7 +289,7 @@ export class AuthService {
    * Verifica si el usuario está autenticado
    */
   isAuthenticated(): Observable<boolean> {
-    return this.user$.pipe(map((user) => !!user));
+    return this.currentUser$.pipe(map((user) => !!user));
   }
 
   /**

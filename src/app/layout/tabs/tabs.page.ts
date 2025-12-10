@@ -1,9 +1,11 @@
-import { Component } from '@angular/core';
+import { Component, inject } from '@angular/core';
+import { CommonModule } from '@angular/common';
 import {
   IonTabs,
   IonTabBar,
   IonTabButton,
   IonLabel,
+  IonAvatar,
   ModalController,
 } from '@ionic/angular/standalone';
 import {
@@ -16,13 +18,22 @@ import {
 } from 'lucide-angular';
 import { CreateContentModalComponent } from 'src/app/components/create-content-modal/create-content-modal.component';
 import { FeedService } from 'src/app/core/services/feed.service';
+import { AuthService } from 'src/app/core/services/auth.service';
 
 @Component({
   selector: 'app-tabs',
   templateUrl: 'tabs.page.html',
   styleUrls: ['tabs.page.scss'],
   standalone: true,
-  imports: [IonTabs, IonTabBar, IonTabButton, IonLabel, LucideAngularModule],
+  imports: [
+    CommonModule,
+    IonTabs,
+    IonTabBar,
+    IonTabButton,
+    IonLabel,
+    IonAvatar,
+    LucideAngularModule,
+  ],
 })
 export class TabsPage {
   // Lucide icons
@@ -31,6 +42,9 @@ export class TabsPage {
   readonly Plus = Plus;
   readonly Calendar = Calendar;
   readonly User = User;
+
+  private authService = inject(AuthService);
+  currentUser$ = this.authService.currentUser$;
 
   constructor(
     private modalCtrl: ModalController,

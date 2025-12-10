@@ -187,23 +187,58 @@ export class ProfilePage implements OnInit {
   }
 
   ngOnInit() {
-    // Read queryParams to determine profile type
     this.route.queryParams.subscribe((params) => {
       const profileType = params['type'];
       const profileId = params['id'];
-      const itemType = params['itemType'];
 
-      console.log('Profile params:', { profileType, profileId, itemType });
-
-      // Set isBusiness based on type parameter
-      if (profileType === 'business') {
-        this.isBusiness = true;
-      } else if (profileType === 'user') {
-        this.isBusiness = false;
+      // Si no hay ID, es mi perfil
+      if (!profileId) {
+        this.loadOwnProfile();
+      } else {
+        // Cargar perfil ajeno (lógica existente o mock)
+        if (profileType === 'business') {
+          this.isBusiness = true;
+        } else {
+          this.isBusiness = false;
+        }
+        // TODO: Load actual other profile data
       }
+    });
+  }
 
-      // TODO: Load actual profile data based on profileId
-      // For now, we use the demo data
+  loadOwnProfile() {
+    this.authService.currentUser$.subscribe((user) => {
+      if (user) {
+        this.isBusiness = user.role === 'business';
+
+        // Actualizar datos del usuario
+        this.userProfile = {
+          ...this.userProfile, // Mantener datos mock que no tengamos (gallery)
+          username: user.username,
+          name: user.username, // O usar un campo 'name' si lo agregamos
+          bio: user.bio || 'Sin biografía',
+          img:
+            user.photoURL ||
+            'https://ui-avatars.com/api/?name=' + user.username,
+          followers: user.followersCount || 0,
+          following: user.followingCount || 0,
+        };
+
+        // Si es negocio, actualizar datos de negocio
+        if (this.isBusiness && user.businessInfo) {
+          this.businessProfile = {
+            ...this.businessProfile,
+            name: user.businessInfo.name || user.username,
+            info: user.businessInfo.description || user.bio || '',
+            address: user.businessInfo.address || '',
+            // Mantener mocks para lo demás por ahora
+          };
+        } else if (this.isBusiness) {
+          // Si es negocio pero no tiene info detallada, usar básicos
+          this.businessProfile.name = user.username;
+          this.businessProfile.info = user.bio || '';
+        }
+      }
     });
   }
 

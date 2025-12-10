@@ -20,7 +20,14 @@
         </ion-tab-button>
 
         <ion-tab-button tab="profile">
-            <lucide-icon [img]="User" [size]="24"></lucide-icon>
+            <ng-container *ngIf="currentUser$ | async as user">
+                <ion-avatar class="tab-avatar" *ngIf="user.photoURL; else defaultIcon">
+                    <img [src]="user.photoURL" alt="Profile" />
+                </ion-avatar>
+            </ng-container>
+            <ng-template #defaultIcon>
+                <lucide-icon [img]="User" [size]="24"></lucide-icon>
+            </ng-template>
             <ion-label>Perfil</ion-label>
         </ion-tab-button>
     </ion-tab-bar>
