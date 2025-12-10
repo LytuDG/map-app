@@ -68,7 +68,8 @@ export class AuthService {
       };
 
       await this.createUserDocument(userData);
-      await this.router.navigate(['/']);
+      // Redirigir a setup-profile en lugar de home
+      await this.router.navigate(['/auth/setup-profile']);
     } catch (error: any) {
       console.error('Error en registro:', error);
       throw this.handleAuthError(error);
@@ -115,9 +116,12 @@ export class AuthService {
         };
 
         await this.createUserDocument(userData);
+        // Nuevo usuario: ir a setup-profile
+        await this.router.navigate(['/auth/setup-profile']);
+      } else {
+        // Usuario existente: ir a home
+        await this.router.navigate(['/']);
       }
-
-      await this.router.navigate(['/']);
     } catch (error: any) {
       console.error('Error en login con Google:', error);
       throw this.handleAuthError(error);

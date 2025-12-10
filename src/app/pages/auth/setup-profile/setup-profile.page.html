@@ -2,16 +2,24 @@
     <div class="auth-container">
         <!-- Branding Header -->
         <div class="branding">
-            <div class="logo">
-                <ion-icon name="person-circle-outline"></ion-icon>
-            </div>
-            <h1 class="app-name">¡Bienvenido!</h1>
-            <p class="tagline">Configura tu perfil</p>
+            <h1 class="page-title">Configurar Perfil</h1>
+            <p class="page-subtitle">Personaliza tu experiencia en Spotl</p>
         </div>
 
-        <!-- Auth Card -->
+        <!-- Setup Card -->
         <div class="auth-card">
-            <h2 class="form-title">Elige tu nombre de usuario</h2>
+
+            <!-- Account Type Selector -->
+            <div class="account-type-selector">
+                <ion-segment [value]="accountType" (ionChange)="onAccountTypeChange($event)" mode="ios">
+                    <ion-segment-button value="user">
+                        <ion-label>Usuario</ion-label>
+                    </ion-segment-button>
+                    <ion-segment-button value="business">
+                        <ion-label>Negocio</ion-label>
+                    </ion-segment-button>
+                </ion-segment>
+            </div>
 
             <!-- Error Message -->
             <div class="error-message" *ngIf="errorMessage">
@@ -19,26 +27,51 @@
                 <span>{{ errorMessage }}</span>
             </div>
 
-            <!-- Setup Form -->
+            <!-- Avatar Upload -->
+            <div class="avatar-section">
+                <div class="current-avatar">
+                    <ion-avatar>
+                        <img [src]="photoURL || 'https://ui-avatars.com/api/?name=' + (username || 'User') + '&background=random'"
+                            alt="Avatar" />
+                    </ion-avatar>
+                </div>
+
+                <div class="upload-control">
+                    <app-file-upload bucket="profiles" buttonText="Cambiar Foto" [compress]="true" [maxWidth]="500"
+                        (fileUploaded)="onFileUploaded($event)"></app-file-upload>
+                </div>
+            </div>
+
+            <!-- Form -->
             <form class="auth-form" (ngSubmit)="onSaveProfile()">
+
                 <!-- Username Input -->
                 <div class="input-group">
-                    <ion-input id="username" type="text" [(ngModel)]="username" name="username"
-                        placeholder="Nombre de usuario" [disabled]="isLoading" autocomplete="username"
-                        fill="outline"></ion-input>
-                    <p class="hint">Este será tu nombre visible en la aplicación</p>
+                    <ion-label position="stacked">{{ accountType === 'business' ? 'Nombre del Negocio' : 'Nombre de
+                        Usuario' }}</ion-label>
+                    <ion-input type="text" [(ngModel)]="username" name="username"
+                        [placeholder]="accountType === 'business' ? 'Ej. Café Central' : 'Ej. sofia_m'"
+                        [disabled]="isLoading" fill="outline"></ion-input>
+                </div>
+
+                <!-- Bio Input -->
+                <div class="input-group">
+                    <ion-label position="stacked">Biografía</ion-label>
+                    <ion-textarea [(ngModel)]="bio" name="bio" rows="3" placeholder="Cuéntanos un poco sobre ti..."
+                        [autoGrow]="true" [disabled]="isLoading" fill="outline"></ion-textarea>
                 </div>
 
                 <!-- Save Button -->
                 <ion-button expand="block" type="submit" class="primary-button" [disabled]="isLoading">
                     <ion-spinner name="crescent" *ngIf="isLoading"></ion-spinner>
-                    <span *ngIf="!isLoading">Continuar</span>
+                    <span *ngIf="!isLoading">Guardar y Continuar</span>
                 </ion-button>
 
                 <!-- Skip Button -->
-                <button type="button" class="skip-button" (click)="onSkip()" [disabled]="isLoading">
+                <ion-button expand="block" fill="clear" class="skip-button" (click)="onSkip()" [disabled]="isLoading">
                     Omitir por ahora
-                </button>
+                </ion-button>
+
             </form>
         </div>
     </div>

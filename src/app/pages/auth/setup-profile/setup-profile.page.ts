@@ -7,9 +7,17 @@ import {
   IonInput,
   IonIcon,
   IonSpinner,
+  IonTextarea,
+  IonSegment,
+  IonSegmentButton,
+  IonLabel,
+  IonAvatar,
 } from '@ionic/angular/standalone';
 import { Router } from '@angular/router';
 import { AuthService } from '../../../core/services/auth.service';
+import { FileUploadComponent } from 'src/app/components/file-upload/file-upload.component';
+import { UploadResult } from 'src/app/core/services/storage.service';
+import { Firestore, doc, updateDoc } from '@angular/fire/firestore';
 
 @Component({
   selector: 'app-setup-profile',
@@ -23,23 +31,51 @@ import { AuthService } from '../../../core/services/auth.service';
     IonInput,
     IonIcon,
     IonSpinner,
+    IonTextarea,
+    IonSegment,
+    IonSegmentButton,
+    IonLabel,
+    IonAvatar,
+    FileUploadComponent,
   ],
 })
 export class SetupProfilePage implements OnInit {
   private authService = inject(AuthService);
+  private firestore = inject(Firestore);
   private router = inject(Router);
 
+  // Form Data
+  accountType: 'user' | 'business' = 'user';
   username = '';
+  bio = '';
+  photoURL = '';
+  photoPath = ''; // Para poder borrarla si se cambia
+
   isLoading = false;
   errorMessage = '';
+  currentUserUid = '';
 
   ngOnInit() {
-    // Obtener el email del usuario para sugerir un username
     this.authService.currentUser$.subscribe((user) => {
-      if (user && !this.username) {
-        this.username = user.username;
+      if (user) {
+        this.currentUserUid = user.uid;
+        if (!this.username) {
+          this.username = user.username;
+        }
+        if (!this.photoURL) {
+          this.photoURL = user.photoURL;
+        }
       }
     });
+  }
+
+  onAccountTypeChange(event: any) {
+    this.accountType = event.detail.value;
+  }
+
+  onFileUploaded(result: UploadResult) {
+    this.photoURL = result.url;
+    this.photoPath = result.path;
   }
 
   async onSaveProfile() {
@@ -53,16 +89,42 @@ export class SetupProfilePage implements OnInit {
     this.errorMessage = '';
 
     try {
-      await this.authService.updateUsername(this.username.trim());
+      // 1. Actualizar Auth Profile (Display Name y PhotoURL)
+      // Nota: updateUsername que ya existía solo actualizaba username, aquí hacemos más
+      // pero para mantener consistencia con el servicio, podríamos extenderlo o hacerlo aquí directo.
+      // Haremos la actualización directa a Firestore para flexibilidad.
+
+      const userRef = doc(this.firestore, 'users', this.currentUserUid);
+
+      const updateData: any = {
+        username: this.username.trim(),
+        bio: this.bio.trim(),
+        role: this.accountType,
+        photoURL: this.photoURL,
+        isProfileCompleted: true, // Flag para saber que ya pasó por aquí
+      };
+
+      if (this.photoPath) {
+        updateData.photoPath = this.photoPath;
+      }
+
+      await updateDoc(userRef, updateData);
+
+      // También actualizar el Auth profile básico si es posible
+      // await this.authService.updateProfile({ displayName: this.username, photoURL: this.photoURL }); // Si existiera ese método
+
       await this.router.navigate(['/']);
     } catch (error: any) {
-      this.errorMessage = error.message || 'Error al actualizar el perfil';
+      console.error('Error saving profile:', error);
+      this.errorMessage = error.message || 'Error al guardar el perfil';
     } finally {
       this.isLoading = false;
     }
   }
 
   async onSkip() {
+    // Marcar como completado aunque salte, para no volver a mostrarlo forzosamente
+    // O simplemente ir al home
     await this.router.navigate(['/']);
   }
 }

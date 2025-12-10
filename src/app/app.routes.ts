@@ -5,18 +5,27 @@ import { authGuard, publicGuard } from './core/guards/auth.guard';
 export const routes: Routes = [
   {
     path: 'auth',
-    canActivate: [publicGuard],
     children: [
       {
         path: 'login',
+        canActivate: [publicGuard],
         loadComponent: () =>
           import('./pages/auth/login/login.page').then((m) => m.LoginPage),
       },
       {
         path: 'register',
+        canActivate: [publicGuard],
         loadComponent: () =>
           import('./pages/auth/register/register.page').then(
             (m) => m.RegisterPage
+          ),
+      },
+      {
+        path: 'setup-profile',
+        canActivate: [authGuard],
+        loadComponent: () =>
+          import('./pages/auth/setup-profile/setup-profile.page').then(
+            (m) => m.SetupProfilePage
           ),
       },
       {
