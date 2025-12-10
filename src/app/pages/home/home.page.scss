@@ -19,18 +19,15 @@
       gap: 12px;
       padding-left: 16px;
 
-      .map-social-logo {
-        display: flex;
-        align-items: center;
-        justify-content: center;
-      }
-
       .app-logo-text {
         font-family: 'Outfit', sans-serif;
         font-weight: 800;
         font-size: 26px;
         letter-spacing: -1.5px;
-        color: #1a1a1a;
+        background: linear-gradient(135deg, #f09433 0%, #bc1888 100%);
+        -webkit-background-clip: text;
+        -webkit-text-fill-color: transparent;
+        background-clip: text;
         padding: 0;
       }
     }

@@ -14,8 +14,8 @@ import {
   Calendar,
   User,
 } from 'lucide-angular';
-import { CreateContentModalComponent } from '../components/create-content-modal/create-content-modal.component';
-import { FeedService } from '../services/feed.service';
+import { CreateContentModalComponent } from 'src/app/components/create-content-modal/create-content-modal.component';
+import { FeedService } from 'src/app/core/services/feed.service';
 
 @Component({
   selector: 'app-tabs',

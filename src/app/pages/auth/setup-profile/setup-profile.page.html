@@ -1,0 +1,45 @@
+<ion-content [fullscreen]="true">
+    <div class="auth-container">
+        <!-- Branding Header -->
+        <div class="branding">
+            <div class="logo">
+                <ion-icon name="person-circle-outline"></ion-icon>
+            </div>
+            <h1 class="app-name">¡Bienvenido!</h1>
+            <p class="tagline">Configura tu perfil</p>
+        </div>
+
+        <!-- Auth Card -->
+        <div class="auth-card">
+            <h2 class="form-title">Elige tu nombre de usuario</h2>
+
+            <!-- Error Message -->
+            <div class="error-message" *ngIf="errorMessage">
+                <ion-icon name="alert-circle-outline"></ion-icon>
+                <span>{{ errorMessage }}</span>
+            </div>
+
+            <!-- Setup Form -->
+            <form class="auth-form" (ngSubmit)="onSaveProfile()">
+                <!-- Username Input -->
+                <div class="input-group">
+                    <ion-input id="username" type="text" [(ngModel)]="username" name="username"
+                        placeholder="Nombre de usuario" [disabled]="isLoading" autocomplete="username"
+                        fill="outline"></ion-input>
+                    <p class="hint">Este será tu nombre visible en la aplicación</p>
+                </div>
+
+                <!-- Save Button -->
+                <ion-button expand="block" type="submit" class="primary-button" [disabled]="isLoading">
+                    <ion-spinner name="crescent" *ngIf="isLoading"></ion-spinner>
+                    <span *ngIf="!isLoading">Continuar</span>
+                </ion-button>
+
+                <!-- Skip Button -->
+                <button type="button" class="skip-button" (click)="onSkip()" [disabled]="isLoading">
+                    Omitir por ahora
+                </button>
+            </form>
+        </div>
+    </div>
+</ion-content>

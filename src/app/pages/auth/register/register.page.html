@@ -1,0 +1,92 @@
+<ion-content [fullscreen]="true">
+    <div class="auth-container">
+        <!-- Branding Header -->
+        <div class="branding">
+            <div class="logo-wrapper">
+                <app-logo [size]="48"></app-logo>
+                <h1 class="app-name">Spotl</h1>
+            </div>
+            <p class="tagline">Descubre tu ciudad</p>
+        </div>
+
+        <!-- Auth Card -->
+        <div class="auth-card">
+            <h2 class="form-title">Crear cuenta</h2>
+
+            <!-- Error Message -->
+            <div class="error-message" *ngIf="errorMessage">
+                <ion-icon name="alert-circle-outline"></ion-icon>
+                <span>{{ errorMessage }}</span>
+            </div>
+
+            <!-- Register Form -->
+            <form class="auth-form" (ngSubmit)="onRegister()">
+                <!-- Email Input -->
+                <div class="input-group">
+                    <ion-input id="email" type="email" [(ngModel)]="email" name="email" placeholder="Correo electrónico"
+                        [disabled]="isLoading" autocomplete="email" fill="outline"></ion-input>
+                </div>
+
+                <!-- Password Input -->
+                <div class="input-group">
+                    <div class="password-wrapper">
+                        <ion-input id="password" [type]="showPassword ? 'text' : 'password'" [(ngModel)]="password"
+                            name="password" placeholder="Contraseña (mín. 6 caracteres)" [disabled]="isLoading"
+                            autocomplete="new-password" fill="outline"></ion-input>
+                        <button type="button" class="toggle-password" (click)="togglePasswordVisibility()"
+                            [disabled]="isLoading">
+                            <ion-icon [name]="showPassword ? 'eye-off-outline' : 'eye-outline'"></ion-icon>
+                        </button>
+                    </div>
+                </div>
+
+                <!-- Confirm Password Input -->
+                <div class="input-group">
+                    <div class="password-wrapper">
+                        <ion-input id="confirmPassword" [type]="showConfirmPassword ? 'text' : 'password'"
+                            [(ngModel)]="confirmPassword" name="confirmPassword" placeholder="Confirmar contraseña"
+                            [disabled]="isLoading" autocomplete="new-password" fill="outline"></ion-input>
+                        <button type="button" class="toggle-password" (click)="toggleConfirmPasswordVisibility()"
+                            [disabled]="isLoading">
+                            <ion-icon [name]="showConfirmPassword ? 'eye-off-outline' : 'eye-outline'"></ion-icon>
+                        </button>
+                    </div>
+                </div>
+
+                <!-- Terms -->
+                <div class="terms">
+                    <p>
+                        Al registrarte, aceptas nuestros
+                        <a href="#" class="link">Términos</a> y
+                        <a href="#" class="link">Privacidad</a>
+                    </p>
+                </div>
+
+                <!-- Register Button -->
+                <ion-button expand="block" type="submit" class="primary-button" [disabled]="isLoading">
+                    <ion-spinner name="crescent" *ngIf="isLoading"></ion-spinner>
+                    <span *ngIf="!isLoading">Crear cuenta</span>
+                </ion-button>
+
+                <!-- Divider -->
+                <div class="divider">
+                    <span>o</span>
+                </div>
+
+                <!-- Google Button -->
+                <button type="button" class="google-button" (click)="onGoogleRegister()" [disabled]="isLoading">
+                    <ion-icon name="logo-google"></ion-icon>
+                    <span>Continuar con Google</span>
+                </button>
+            </form>
+
+            <!-- Login Link -->
+            <div class="footer-link">
+                <p>
+                    ¿Ya tienes cuenta?
+                    <a routerLink="/auth/login">Inicia sesión</a>
+                </p>
+            </div>
+        </div>
+    </div>
+</ion-content>

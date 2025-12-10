@@ -14,6 +14,9 @@ export const environment = {
     measurementId: 'G-CJYN88MZCY',
   },
   public_auth_name: 'project-248447900450',
+  supabase_url: 'https://nnlxcvbobzmtchopglid.supabase.co',
+  supabase_api_key:
+    'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6Im5ubHhjdmJvYnptdGNob3BnbGlkIiwicm9sZSI6ImFub24iLCJpYXQiOjE3NjUzNzk4OTQsImV4cCI6MjA4MDk1NTg5NH0.dtxxd8Hwk8IsYhDkdm_0ZYcTZLrRCuUv0esxOh5dJTo',
 };
 
 /*

@@ -1,7 +1,7 @@
 import { Component, OnInit } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { FormsModule } from '@angular/forms';
-import { ActivatedRoute } from '@angular/router';
+import { ActivatedRoute, Router } from '@angular/router';
 import {
   IonContent,
   IonHeader,
@@ -23,10 +23,12 @@ import {
   IonTitle,
   IonSearchbar,
   IonThumbnail,
+  ActionSheetController,
+  AlertController,
 } from '@ionic/angular/standalone';
 import { addIcons } from 'ionicons';
 import {
-  settingsOutline,
+  menuOutline,
   shareSocialOutline,
   globeOutline,
   timeOutline,
@@ -36,7 +38,13 @@ import {
   bookmarkOutline,
   searchOutline,
   add,
+  personOutline,
+  settingsOutline,
+  helpCircleOutline,
+  shieldOutline,
+  logOutOutline,
 } from 'ionicons/icons';
+import { AuthService } from 'src/app/core/services/auth.service';
 
 @Component({
   selector: 'app-profile',
@@ -152,8 +160,15 @@ export class ProfilePage implements OnInit {
 
   filteredMenu = [...this.businessProfile.menu];
 
-  constructor(private route: ActivatedRoute) {
+  constructor(
+    private route: ActivatedRoute,
+    private router: Router,
+    private actionSheetCtrl: ActionSheetController,
+    private alertCtrl: AlertController,
+    private authService: AuthService
+  ) {
     addIcons({
+      menuOutline,
       settingsOutline,
       shareSocialOutline,
       globeOutline,
@@ -164,6 +179,10 @@ export class ProfilePage implements OnInit {
       bookmarkOutline,
       searchOutline,
       add,
+      personOutline,
+      helpCircleOutline,
+      shieldOutline,
+      logOutOutline,
     });
   }
 
@@ -186,6 +205,84 @@ export class ProfilePage implements OnInit {
       // TODO: Load actual profile data based on profileId
       // For now, we use the demo data
     });
+  }
+
+  async openMenu() {
+    const actionSheet = await this.actionSheetCtrl.create({
+      header: 'Opciones',
+      cssClass: 'profile-menu-action-sheet',
+      buttons: [
+        {
+          text: 'Editar Perfil',
+          icon: 'person-outline',
+          handler: () => {
+            console.log('Editar perfil');
+            // TODO: Navigate to edit profile
+          },
+        },
+        {
+          text: 'Configuración',
+          icon: 'settings-outline',
+          handler: () => {
+            console.log('Configuración');
+            // TODO: Navigate to settings
+          },
+        },
+        {
+          text: 'Ayuda',
+          icon: 'help-circle-outline',
+          handler: () => {
+            console.log('Ayuda');
+            // TODO: Navigate to help
+          },
+        },
+        {
+          text: 'Privacidad',
+          icon: 'shield-outline',
+          handler: () => {
+            console.log('Privacidad');
+            // TODO: Navigate to privacy
+          },
+        },
+        {
+          text: 'Cerrar Sesión',
+          icon: 'log-out-outline',
+          role: 'destructive',
+          handler: () => {
+            this.confirmLogout();
+          },
+        },
+        {
+          text: 'Cancelar',
+          role: 'cancel',
+        },
+      ],
+    });
+
+    await actionSheet.present();
+  }
+
+  async confirmLogout() {
+    const alert = await this.alertCtrl.create({
+      header: '¿Cerrar sesión?',
+      message: '¿Estás seguro de que quieres cerrar sesión?',
+      cssClass: 'logout-alert',
+      buttons: [
+        {
+          text: 'Cancelar',
+          role: 'cancel',
+        },
+        {
+          text: 'Cerrar Sesión',
+          role: 'destructive',
+          handler: async () => {
+            await this.authService.logout();
+          },
+        },
+      ],
+    });
+
+    await alert.present();
   }
 
   toggleType() {

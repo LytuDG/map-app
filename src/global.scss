@@ -45,3 +45,58 @@
         --background: #f8f8f8;
     }
 }
+
+// Profile Menu Action Sheet
+.profile-menu-action-sheet {
+    .action-sheet-group {
+        border-radius: 16px 16px 0 0;
+    }
+
+    .action-sheet-title {
+        font-weight: 600;
+        font-size: 1rem;
+        color: #1a1a1a;
+    }
+
+    .action-sheet-button {
+        font-size: 0.938rem;
+
+        &.action-sheet-destructive {
+            color: #dc2626;
+
+            ion-icon {
+                color: #dc2626;
+            }
+        }
+
+        ion-icon {
+            font-size: 22px;
+            margin-right: 12px;
+        }
+    }
+}
+
+// Logout Alert
+.logout-alert {
+    .alert-head {
+        padding-bottom: 0.5rem;
+    }
+
+    .alert-title {
+        font-weight: 600;
+        font-size: 1.125rem;
+    }
+
+    .alert-message {
+        color: #666;
+        font-size: 0.938rem;
+    }
+
+    .alert-button {
+        font-weight: 600;
+
+        &.alert-button-role-destructive {
+            color: #dc2626;
+        }
+    }
+}

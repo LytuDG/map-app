@@ -42,9 +42,10 @@ import {
   locationSharp,
   chatbubbleEllipsesOutline,
 } from 'ionicons/icons';
-import { CommentsModalComponent } from '../components/comments-modal/comments-modal.component';
-import { NotificationsModalComponent } from '../components/notifications-modal/notifications-modal.component';
-import { FeedService } from '../services/feed.service';
+import { CommentsModalComponent } from 'src/app/components/comments-modal/comments-modal.component';
+import { NotificationsModalComponent } from 'src/app/components/notifications-modal/notifications-modal.component';
+import { FeedService } from 'src/app/core/services/feed.service';
+import { LogoComponent } from 'src/app/components/logo/logo.component';
 
 @Component({
   selector: 'app-home',
@@ -72,6 +73,7 @@ import { FeedService } from '../services/feed.service';
     IonChip,
     IonFooter,
     IonSearchbar,
+    LogoComponent,
   ],
 })
 export class HomePage implements OnInit {

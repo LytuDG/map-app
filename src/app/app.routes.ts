@@ -1,28 +1,55 @@
 import { Routes } from '@angular/router';
-import { TabsPage } from './tabs/tabs.page';
+import { TabsPage } from './layout/tabs/tabs.page';
+import { authGuard, publicGuard } from './core/guards/auth.guard';
 
 export const routes: Routes = [
   {
+    path: 'auth',
+    canActivate: [publicGuard],
+    children: [
+      {
+        path: 'login',
+        loadComponent: () =>
+          import('./pages/auth/login/login.page').then((m) => m.LoginPage),
+      },
+      {
+        path: 'register',
+        loadComponent: () =>
+          import('./pages/auth/register/register.page').then(
+            (m) => m.RegisterPage
+          ),
+      },
+      {
+        path: '',
+        redirectTo: 'login',
+        pathMatch: 'full',
+      },
+    ],
+  },
+  {
     path: '',
     component: TabsPage,
+    canActivate: [authGuard],
     children: [
       {
         path: 'feed',
-        loadComponent: () => import('./home/home.page').then((m) => m.HomePage),
+        loadComponent: () =>
+          import('./pages/home/home.page').then((m) => m.HomePage),
       },
       {
         path: 'map',
-        loadComponent: () => import('./map/map.page').then((m) => m.MapPage),
+        loadComponent: () =>
+          import('./pages/map/map.page').then((m) => m.MapPage),
       },
       {
         path: 'events',
         loadComponent: () =>
-          import('./events/events.page').then((m) => m.EventsPage),
+          import('./pages/events/events.page').then((m) => m.EventsPage),
       },
       {
         path: 'profile',
         loadComponent: () =>
-          import('./profile/profile.page').then((m) => m.ProfilePage),
+          import('./pages/profile/profile.page').then((m) => m.ProfilePage),
       },
       {
         path: '',
@@ -33,12 +60,14 @@ export const routes: Routes = [
   },
   {
     path: 'profile',
+    canActivate: [authGuard],
     loadComponent: () =>
-      import('./profile/profile.page').then((m) => m.ProfilePage),
+      import('./pages/profile/profile.page').then((m) => m.ProfilePage),
   },
   {
     path: 'messages',
+    canActivate: [authGuard],
     loadComponent: () =>
-      import('./messages/messages.page').then((m) => m.MessagesPage),
+      import('./pages/messages/messages.page').then((m) => m.MessagesPage),
   },
 ];

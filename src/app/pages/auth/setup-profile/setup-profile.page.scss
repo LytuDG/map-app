@@ -1,0 +1,246 @@
+ion-content {
+    --background: #ffffff;
+}
+
+.auth-container {
+    min-height: 100vh;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+    padding: 2rem 1.5rem;
+    max-width: 440px;
+    margin: 0 auto;
+}
+
+// Branding
+.branding {
+    text-align: center;
+    margin-bottom: 3rem;
+    animation: fadeIn 0.6s ease-out;
+}
+
+.logo {
+    width: 64px;
+    height: 64px;
+    margin: 0 auto 1rem;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    background: #000;
+    border-radius: 16px;
+    animation: scaleIn 0.5s ease-out;
+
+    ion-icon {
+        font-size: 32px;
+        color: #fff;
+    }
+}
+
+.app-name {
+    font-size: 2rem;
+    font-weight: 700;
+    color: #000;
+    margin: 0 0 0.5rem 0;
+    letter-spacing: -0.5px;
+}
+
+.tagline {
+    font-size: 0.938rem;
+    color: #666;
+    margin: 0;
+    font-weight: 400;
+}
+
+// Auth Card
+.auth-card {
+    width: 100%;
+    animation: slideUp 0.6s ease-out 0.1s backwards;
+}
+
+.form-title {
+    font-size: 1.5rem;
+    font-weight: 600;
+    color: #000;
+    margin: 0 0 1.5rem 0;
+    text-align: center;
+}
+
+// Error Message
+.error-message {
+    background: #fef2f2;
+    border: 1px solid #fecaca;
+    border-radius: 8px;
+    padding: 0.75rem 1rem;
+    margin-bottom: 1.5rem;
+    display: flex;
+    align-items: center;
+    gap: 0.75rem;
+    animation: shake 0.4s ease-in-out;
+
+    ion-icon {
+        font-size: 18px;
+        color: #dc2626;
+        flex-shrink: 0;
+    }
+
+    span {
+        font-size: 0.875rem;
+        color: #991b1b;
+        line-height: 1.4;
+    }
+}
+
+// Form
+.auth-form {
+    margin-bottom: 0;
+}
+
+.input-group {
+    margin-bottom: 1.5rem;
+
+    ion-input {
+        --border-color: #e5e7eb;
+        --border-radius: 8px;
+        --padding-start: 1rem;
+        --padding-end: 1rem;
+        --padding-top: 0.875rem;
+        --padding-bottom: 0.875rem;
+        font-size: 0.938rem;
+
+        &::part(native) {
+            color: #000;
+        }
+
+        &::part(native)::placeholder {
+            color: #9ca3af;
+        }
+    }
+
+    .hint {
+        font-size: 0.813rem;
+        color: #6b7280;
+        margin: 0.5rem 0 0 0;
+        text-align: center;
+    }
+}
+
+// Buttons
+.primary-button {
+    --background: #000;
+    --background-hover: #1f2937;
+    --background-activated: #374151;
+    --color: #fff;
+    --border-radius: 8px;
+    --padding-top: 0.875rem;
+    --padding-bottom: 0.875rem;
+    font-size: 0.938rem;
+    font-weight: 600;
+    text-transform: none;
+    letter-spacing: 0;
+    margin: 0 0 1rem 0;
+    height: auto;
+    transition: all 0.2s ease;
+
+    &:hover:not([disabled]) {
+        transform: translateY(-1px);
+    }
+
+    &:active:not([disabled]) {
+        transform: translateY(0);
+    }
+
+    ion-spinner {
+        width: 18px;
+        height: 18px;
+    }
+}
+
+.skip-button {
+    width: 100%;
+    padding: 0.875rem 1rem;
+    border: none;
+    background: transparent;
+    color: #6b7280;
+    font-size: 0.938rem;
+    font-weight: 500;
+    cursor: pointer;
+    transition: all 0.2s ease;
+    border-radius: 8px;
+
+    &:hover:not([disabled]) {
+        background: #f9fafb;
+        color: #000;
+    }
+
+    &:disabled {
+        opacity: 0.5;
+        cursor: not-allowed;
+    }
+}
+
+// Animations
+@keyframes fadeIn {
+    from {
+        opacity: 0;
+    }
+
+    to {
+        opacity: 1;
+    }
+}
+
+@keyframes scaleIn {
+    from {
+        opacity: 0;
+        transform: scale(0.9);
+    }
+
+    to {
+        opacity: 1;
+        transform: scale(1);
+    }
+}
+
+@keyframes slideUp {
+    from {
+        opacity: 0;
+        transform: translateY(20px);
+    }
+
+    to {
+        opacity: 1;
+        transform: translateY(0);
+    }
+}
+
+@keyframes shake {
+
+    0%,
+    100% {
+        transform: translateX(0);
+    }
+
+    25% {
+        transform: translateX(-8px);
+    }
+
+    75% {
+        transform: translateX(8px);
+    }
+}
+
+// Responsive
+@media (max-width: 768px) {
+    .auth-container {
+        padding: 1.5rem 1rem;
+    }
+
+    .branding {
+        margin-bottom: 2rem;
+    }
+
+    .app-name {
+        font-size: 1.75rem;
+    }
+}

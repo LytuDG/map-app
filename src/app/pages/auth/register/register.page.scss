@@ -1,0 +1,366 @@
+ion-content {
+    --background: #ffffff;
+}
+
+.auth-container {
+    min-height: 100vh;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+    padding: 2rem 1.5rem;
+    max-width: 440px;
+    margin: 0 auto;
+}
+
+// Branding
+.branding {
+    text-align: center;
+    margin-bottom: 3rem;
+    animation: fadeIn 0.6s ease-out;
+}
+
+.logo-wrapper {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    gap: 0.75rem;
+    margin-bottom: 0.75rem;
+    animation: scaleIn 0.5s ease-out;
+}
+
+.app-name {
+    font-size: 2.25rem;
+    font-weight: 700;
+    background: linear-gradient(135deg, #f09433 0%, #bc1888 100%);
+    -webkit-background-clip: text;
+    -webkit-text-fill-color: transparent;
+    background-clip: text;
+    margin: 0;
+    letter-spacing: -0.5px;
+}
+
+.tagline {
+    font-size: 0.938rem;
+    color: #666;
+    margin: 0;
+    font-weight: 400;
+}
+
+// Auth Card
+.auth-card {
+    width: 100%;
+    animation: slideUp 0.6s ease-out 0.1s backwards;
+}
+
+.form-title {
+    font-size: 1.5rem;
+    font-weight: 600;
+    color: #000;
+    margin: 0 0 1.5rem 0;
+    text-align: center;
+}
+
+// Error Message
+.error-message {
+    background: #fef2f2;
+    border: 1px solid #fecaca;
+    border-radius: 8px;
+    padding: 0.75rem 1rem;
+    margin-bottom: 1.5rem;
+    display: flex;
+    align-items: center;
+    gap: 0.75rem;
+    animation: shake 0.4s ease-in-out;
+
+    ion-icon {
+        font-size: 18px;
+        color: #dc2626;
+        flex-shrink: 0;
+    }
+
+    span {
+        font-size: 0.875rem;
+        color: #991b1b;
+        line-height: 1.4;
+    }
+}
+
+// Form
+.auth-form {
+    margin-bottom: 0;
+}
+
+.input-group {
+    margin-bottom: 1rem;
+
+    ion-input {
+        --border-color: #e5e7eb;
+        --border-radius: 8px;
+        --padding-start: 1rem;
+        --padding-end: 1rem;
+        --padding-top: 0.875rem;
+        --padding-bottom: 0.875rem;
+        font-size: 0.938rem;
+
+        &::part(native) {
+            color: #000;
+        }
+
+        &::part(native)::placeholder {
+            color: #9ca3af;
+        }
+
+        &:focus-within {
+            --border-color: #f09433;
+        }
+    }
+}
+
+.password-wrapper {
+    position: relative;
+
+    ion-input {
+        --padding-end: 3rem;
+    }
+
+    .toggle-password {
+        position: absolute;
+        right: 0.75rem;
+        top: 50%;
+        transform: translateY(-50%);
+        background: none;
+        border: none;
+        padding: 0.5rem;
+        cursor: pointer;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        color: #6b7280;
+        transition: color 0.2s ease;
+
+        ion-icon {
+            font-size: 20px;
+        }
+
+        &:hover:not([disabled]) {
+            color: #f09433;
+        }
+
+        &:disabled {
+            opacity: 0.5;
+            cursor: not-allowed;
+        }
+    }
+}
+
+.terms {
+    margin-bottom: 1.5rem;
+
+    p {
+        font-size: 0.813rem;
+        color: #6b7280;
+        line-height: 1.5;
+        margin: 0;
+        text-align: center;
+    }
+
+    .link {
+        background: linear-gradient(135deg, #f09433 0%, #bc1888 100%);
+        -webkit-background-clip: text;
+        -webkit-text-fill-color: transparent;
+        background-clip: text;
+        text-decoration: none;
+        font-weight: 500;
+        transition: opacity 0.2s ease;
+
+        &:hover {
+            opacity: 0.8;
+        }
+    }
+}
+
+// Buttons
+.primary-button {
+    --background: linear-gradient(135deg, #f09433 0%, #bc1888 100%);
+    --background-hover: linear-gradient(135deg, #e08323 0%, #ac0878 100%);
+    --background-activated: linear-gradient(135deg, #d07213 0%, #9c0068 100%);
+    --color: #fff;
+    --border-radius: 8px;
+    --padding-top: 0.875rem;
+    --padding-bottom: 0.875rem;
+    font-size: 0.938rem;
+    font-weight: 600;
+    text-transform: none;
+    letter-spacing: 0;
+    margin: 0 0 1.5rem 0;
+    height: auto;
+    transition: all 0.2s ease;
+
+    &:hover:not([disabled]) {
+        transform: translateY(-1px);
+        box-shadow: 0 4px 12px rgba(240, 148, 51, 0.3);
+    }
+
+    &:active:not([disabled]) {
+        transform: translateY(0);
+    }
+
+    ion-spinner {
+        width: 18px;
+        height: 18px;
+    }
+}
+
+// Divider
+.divider {
+    display: flex;
+    align-items: center;
+    margin: 1.5rem 0;
+    color: #9ca3af;
+    font-size: 0.875rem;
+
+    &::before,
+    &::after {
+        content: '';
+        flex: 1;
+        height: 1px;
+        background: #e5e7eb;
+    }
+
+    span {
+        padding: 0 1rem;
+    }
+}
+
+// Google Button
+.google-button {
+    width: 100%;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    gap: 0.75rem;
+    padding: 0.875rem 1rem;
+    border: 1px solid #e5e7eb;
+    border-radius: 8px;
+    background: #fff;
+    color: #000;
+    font-size: 0.938rem;
+    font-weight: 500;
+    cursor: pointer;
+    transition: all 0.2s ease;
+    margin-bottom: 1.5rem;
+
+    ion-icon {
+        font-size: 20px;
+        color: #ea4335;
+    }
+
+    &:hover:not([disabled]) {
+        background: #f9fafb;
+        border-color: #d1d5db;
+    }
+
+    &:active:not([disabled]) {
+        background: #f3f4f6;
+    }
+
+    &:disabled {
+        opacity: 0.5;
+        cursor: not-allowed;
+    }
+}
+
+// Footer Link
+.footer-link {
+    text-align: center;
+    padding-top: 1.5rem;
+    border-top: 1px solid #e5e7eb;
+
+    p {
+        margin: 0;
+        font-size: 0.938rem;
+        color: #6b7280;
+    }
+
+    a {
+        background: linear-gradient(135deg, #f09433 0%, #bc1888 100%);
+        -webkit-background-clip: text;
+        -webkit-text-fill-color: transparent;
+        background-clip: text;
+        text-decoration: none;
+        font-weight: 600;
+        margin-left: 0.25rem;
+        transition: opacity 0.2s ease;
+
+        &:hover {
+            opacity: 0.8;
+        }
+    }
+}
+
+// Animations
+@keyframes fadeIn {
+    from {
+        opacity: 0;
+    }
+
+    to {
+        opacity: 1;
+    }
+}
+
+@keyframes scaleIn {
+    from {
+        opacity: 0;
+        transform: scale(0.95);
+    }
+
+    to {
+        opacity: 1;
+        transform: scale(1);
+    }
+}
+
+@keyframes slideUp {
+    from {
+        opacity: 0;
+        transform: translateY(20px);
+    }
+
+    to {
+        opacity: 1;
+        transform: translateY(0);
+    }
+}
+
+@keyframes shake {
+
+    0%,
+    100% {
+        transform: translateX(0);
+    }
+
+    25% {
+        transform: translateX(-8px);
+    }
+
+    75% {
+        transform: translateX(8px);
+    }
+}
+
+// Responsive
+@media (max-width: 768px) {
+    .auth-container {
+        padding: 1.5rem 1rem;
+    }
+
+    .branding {
+        margin-bottom: 2rem;
+    }
+
+    .app-name {
+        font-size: 2rem;
+    }
+}

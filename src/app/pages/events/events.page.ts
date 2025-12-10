@@ -27,7 +27,7 @@ import {
   ellipsisHorizontal,
   paperPlaneOutline,
 } from 'ionicons/icons';
-import { FeedService } from '../services/feed.service';
+import { FeedService } from 'src/app/core/services/feed.service';
 
 @Component({
   selector: 'app-events',
@@ -84,7 +84,7 @@ export class EventsPage implements OnInit {
   }
 
   ngOnInit() {
-    this.feedService.getEventsItems().subscribe((events) => {
+    this.feedService.getEventsItems().subscribe((events: any) => {
       this.allEvents = events;
       this.filterEvents();
     });
