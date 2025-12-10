@@ -9,4 +9,5 @@ export const environment = {
     appId: '1:248447900450:web:e73faef6c716c3a993637b',
     measurementId: 'G-CJYN88MZCY',
   },
+  public_auth_name: 'project-248447900450',
 };
