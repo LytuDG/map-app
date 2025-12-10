@@ -83,6 +83,7 @@ export class ProfilePage implements OnInit {
 
   segment = 'posts';
   businessSegment = 'menu';
+  isLoadingProfile = true;
   searchTerm = '';
 
   userProfile = {
@@ -193,8 +194,13 @@ export class ProfilePage implements OnInit {
     this.authService.currentUser$
       .pipe(take(1))
       .subscribe((u) => (this.currentUserId = u?.uid || null));
+  }
 
-    this.route.queryParams.subscribe((params) => {
+  ionViewWillEnter() {
+    // Reset loading state
+    this.isLoadingProfile = true;
+
+    this.route.queryParams.pipe(take(1)).subscribe((params) => {
       const profileType = params['type'];
       const profileId = params['id'];
       this.profileId = profileId;
@@ -202,6 +208,7 @@ export class ProfilePage implements OnInit {
       // Si no hay ID, es mi perfil
       if (!profileId) {
         this.isOwnProfile = true;
+        this.isFollowing = false;
         this.loadOwnProfile();
       } else {
         this.isOwnProfile = false;
@@ -251,6 +258,8 @@ export class ProfilePage implements OnInit {
           this.businessProfile.name = user.username;
           this.businessProfile.info = user.bio || '';
         }
+
+        this.isLoadingProfile = false;
       }
     });
   }
@@ -379,6 +388,8 @@ export class ProfilePage implements OnInit {
             // img: user.photoURL ... (falta actualizar businessProfile con datos reales completos, pero suficiente por ahora)
           };
         }
+
+        this.isLoadingProfile = false;
       }
     });
   }

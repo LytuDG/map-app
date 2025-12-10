@@ -41,7 +41,12 @@ import { FeedService } from 'src/app/core/services/feed.service';
 import { UserService } from 'src/app/core/services/user.service';
 import { LogoComponent } from 'src/app/components/logo/logo.component';
 import { Subject } from 'rxjs';
-import { debounceTime, distinctUntilChanged, switchMap } from 'rxjs/operators';
+import {
+  debounceTime,
+  distinctUntilChanged,
+  switchMap,
+  tap,
+} from 'rxjs/operators';
 
 @Component({
   selector: 'app-home',
@@ -71,6 +76,7 @@ export class HomePage implements OnInit {
   // Search state
   searchResults: any[] = [];
   isSearching = false;
+  isLoadingSearch = false;
   private searchTerms = new Subject<string>();
 
   constructor(
@@ -112,6 +118,7 @@ export class HomePage implements OnInit {
       .pipe(
         debounceTime(300),
         distinctUntilChanged(),
+        tap(() => (this.isLoadingSearch = true)),
         switchMap((term: string) => this.userService.searchUsers(term))
       )
       .subscribe((users) => {
@@ -125,6 +132,7 @@ export class HomePage implements OnInit {
           desc: user.bio,
           role: user.role,
         }));
+        this.isLoadingSearch = false;
       });
   }
 

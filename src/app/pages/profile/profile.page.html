@@ -19,7 +19,38 @@
 
   <!-- ================= USER PROFILE VIEW ================= -->
   <div class="user-profile" *ngIf="!isBusiness">
-    <div class="header-section ion-padding">
+    <!-- Skeleton Loading -->
+    <div class="header-section ion-padding" *ngIf="isLoadingProfile">
+      <div class="top-row">
+        <ion-avatar class="main-avatar skeleton-avatar"></ion-avatar>
+        <div class="stats-row">
+          <div class="stat">
+            <span class="num skeleton-text skeleton-num"></span>
+            <span class="label skeleton-text skeleton-label"></span>
+          </div>
+          <div class="stat">
+            <span class="num skeleton-text skeleton-num"></span>
+            <span class="label skeleton-text skeleton-label"></span>
+          </div>
+          <div class="stat">
+            <span class="num skeleton-text skeleton-num"></span>
+            <span class="label skeleton-text skeleton-label"></span>
+          </div>
+        </div>
+      </div>
+
+      <div class="details-section">
+        <h2 class="name skeleton-text skeleton-name"></h2>
+        <p class="bio skeleton-text skeleton-bio"></p>
+      </div>
+
+      <div class="action-buttons">
+        <div class="skeleton-button"></div>
+      </div>
+    </div>
+
+    <!-- Actual Content -->
+    <div class="header-section ion-padding" *ngIf="!isLoadingProfile">
       <div class="top-row">
         <ion-avatar class="main-avatar">
           <img [src]="userProfile.img" class="img-load" />

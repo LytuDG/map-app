@@ -17,7 +17,7 @@ import {
   deleteDoc,
   increment,
 } from '@angular/fire/firestore';
-import { Observable, from, map, catchError, of } from 'rxjs';
+import { Observable, from, map, catchError, of, switchMap } from 'rxjs';
 import { User } from '../interfaces';
 import { Follow, CreateFollowDto } from '../interfaces/follow.interface';
 
@@ -35,27 +35,54 @@ export class UserService {
    * @returns Lista de usuarios coincidentes
    */
   searchUsers(searchTerm: string): Observable<User[]> {
-    if (!searchTerm || searchTerm.trim() === '') {
-      return of([]);
+    const usersRef = collection(this.firestore, 'users');
+
+    // Si hay término de búsqueda, buscar por username
+    if (searchTerm && searchTerm.trim() !== '') {
+      const term = searchTerm.toLowerCase();
+      const q = query(
+        usersRef,
+        where('username', '>=', term),
+        where('username', '<=', term + '\uf8ff'),
+        limit(20)
+      );
+
+      return from(getDocs(q)).pipe(
+        map((querySnapshot) => {
+          return querySnapshot.docs.map((doc) => doc.data() as User);
+        }),
+        switchMap((results) => {
+          // Si no hay resultados, devolver los primeros 10 usuarios
+          if (results.length === 0) {
+            return this.getFirstTenUsers();
+          }
+          return of(results);
+        }),
+        catchError((error) => {
+          console.error('Error searching users:', error);
+          // En caso de error, intentar devolver los primeros 10
+          return this.getFirstTenUsers();
+        })
+      );
     }
 
-    const term = searchTerm.toLowerCase();
-    // Búsqueda simple por prefijo en username
-    // Nota: Para búsquedas más complejas se recomienda Algolia o Typesense
+    // Si no hay término de búsqueda, devolver los primeros 10
+    return this.getFirstTenUsers();
+  }
+
+  /**
+   * Obtener los primeros 10 usuarios
+   */
+  private getFirstTenUsers(): Observable<User[]> {
     const usersRef = collection(this.firestore, 'users');
-    const q = query(
-      usersRef,
-      where('username', '>=', term),
-      where('username', '<=', term + '\uf8ff'),
-      limit(20)
-    );
+    const q = query(usersRef, limit(10));
 
     return from(getDocs(q)).pipe(
       map((querySnapshot) => {
         return querySnapshot.docs.map((doc) => doc.data() as User);
       }),
       catchError((error) => {
-        console.error('Error searching users:', error);
+        console.error('Error getting first users:', error);
         return of([]);
       })
     );
@@ -83,6 +110,31 @@ export class UserService {
   }
 
   /**
+   * Asegurar que los campos de conteo existen en los usuarios
+   */
+  private async ensureFollowCountsExist(
+    transaction: any,
+    userRef: any
+  ): Promise<void> {
+    const userDoc = await transaction.get(userRef);
+    if (userDoc.exists()) {
+      const data = userDoc.data();
+      const updates: any = {};
+
+      if (data.followersCount === undefined) {
+        updates.followersCount = 0;
+      }
+      if (data.followingCount === undefined) {
+        updates.followingCount = 0;
+      }
+
+      if (Object.keys(updates).length > 0) {
+        transaction.update(userRef, updates);
+      }
+    }
+  }
+
+  /**
    * Seguir a un usuario
    * @param followerId ID del usuario que sigue
    * @param followingId ID del usuario a seguir
@@ -101,11 +153,15 @@ export class UserService {
 
     try {
       await runTransaction(this.firestore, async (transaction) => {
-        // Verificar si ya sigue (opcional, pero buena práctica)
+        // Verificar si ya sigue
         const followDoc = await transaction.get(followRef);
         if (followDoc.exists()) {
           throw new Error('Ya sigues a este usuario');
         }
+
+        // Asegurar que los campos de conteo existen
+        await this.ensureFollowCountsExist(transaction, followerRef);
+        await this.ensureFollowCountsExist(transaction, followingRef);
 
         // Crear documento de relación
         const followData: Follow = {
@@ -151,6 +207,10 @@ export class UserService {
         if (!followDoc.exists()) {
           throw new Error('No sigues a este usuario');
         }
+
+        // Asegurar que los campos de conteo existen
+        await this.ensureFollowCountsExist(transaction, followerRef);
+        await this.ensureFollowCountsExist(transaction, followingRef);
 
         // Eliminar relación
         transaction.delete(followRef);

@@ -30,23 +30,38 @@
 
     <!-- Search Results -->
     <div class="search-results ion-padding-horizontal" *ngIf="isSearching">
-      <div *ngIf="searchResults.length === 0" class="no-results ion-text-center ion-padding">
+      <!-- Skeleton Loading -->
+      <div *ngIf="isLoadingSearch">
+        <div class="user-search-item skeleton-item" *ngFor="let i of [1,2,3,4,5]">
+          <div class="skeleton-avatar-small"></div>
+          <div class="user-info">
+            <div class="skeleton-text skeleton-username"></div>
+            <div class="skeleton-text skeleton-bio-small"></div>
+          </div>
+        </div>
+      </div>
+
+      <!-- No Results -->
+      <div *ngIf="!isLoadingSearch && searchResults.length === 0" class="no-results ion-text-center ion-padding">
         <p class="text-medium">No se encontraron usuarios</p>
       </div>
 
-      <div *ngFor="let user of searchResults" class="user-search-item" (click)="handleAction(user)">
-        <ion-avatar>
-          <img [src]="user.userImg" />
-        </ion-avatar>
-        <div class="user-info">
-          <div class="name-row">
-            <h4>{{ user.user }}</h4>
-            <ion-badge color="tertiary" *ngIf="user.role === 'business'" class="mini-badge">Negocio</ion-badge>
+      <!-- Actual Results -->
+      <div *ngIf="!isLoadingSearch">
+        <div *ngFor="let user of searchResults" class="user-search-item" (click)="handleAction(user)">
+          <ion-avatar>
+            <img [src]="user.userImg" />
+          </ion-avatar>
+          <div class="user-info">
+            <div class="name-row">
+              <h4>{{ user.user }}</h4>
+              <ion-badge color="tertiary" *ngIf="user.role === 'business'" class="mini-badge">Negocio</ion-badge>
+            </div>
+            <p class="bio-text">{{ user.desc || 'Sin biografía' | slice:0:50 }}{{ user.desc?.length > 50 ? '...' : '' }}
+            </p>
           </div>
-          <p class="bio-text">{{ user.desc || 'Sin biografía' | slice:0:50 }}{{ user.desc?.length > 50 ? '...' : '' }}
-          </p>
+          <ion-icon name="chevron-forward-outline" color="medium"></ion-icon>
         </div>
-        <ion-icon name="chevron-forward-outline" color="medium"></ion-icon>
       </div>
     </div>
 
