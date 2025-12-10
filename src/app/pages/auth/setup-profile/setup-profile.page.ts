@@ -13,7 +13,7 @@ import {
   IonLabel,
   IonAvatar,
 } from '@ionic/angular/standalone';
-import { Router } from '@angular/router';
+import { Router, ActivatedRoute } from '@angular/router';
 import { AuthService } from '../../../core/services/auth.service';
 import { FileUploadComponent } from 'src/app/components/file-upload/file-upload.component';
 import { UploadResult } from 'src/app/core/services/storage.service';
@@ -43,6 +43,9 @@ export class SetupProfilePage implements OnInit {
   private authService = inject(AuthService);
   private firestore = inject(Firestore);
   private router = inject(Router);
+  private route = inject(ActivatedRoute);
+
+  mode: 'setup' | 'edit' = 'setup';
 
   // Form Data
   accountType: 'user' | 'business' = 'user';
@@ -56,6 +59,10 @@ export class SetupProfilePage implements OnInit {
   currentUserUid = '';
 
   ngOnInit() {
+    this.route.queryParams.subscribe((params) => {
+      this.mode = (params['mode'] as 'setup' | 'edit') || 'setup';
+    });
+
     this.authService.currentUser$.subscribe((user) => {
       if (user) {
         this.currentUserUid = user.uid;
@@ -113,7 +120,11 @@ export class SetupProfilePage implements OnInit {
       // También actualizar el Auth profile básico si es posible
       // await this.authService.updateProfile({ displayName: this.username, photoURL: this.photoURL }); // Si existiera ese método
 
-      await this.router.navigate(['/']);
+      if (this.mode === 'edit') {
+        await this.router.navigate(['/profile']);
+      } else {
+        await this.router.navigate(['/']);
+      }
     } catch (error: any) {
       console.error('Error saving profile:', error);
       this.errorMessage = error.message || 'Error al guardar el perfil';

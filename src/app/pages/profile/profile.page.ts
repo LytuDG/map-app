@@ -45,6 +45,8 @@ import {
   logOutOutline,
 } from 'ionicons/icons';
 import { AuthService } from 'src/app/core/services/auth.service';
+import { UserService } from 'src/app/core/services/user.service';
+import { take } from 'rxjs/operators';
 
 @Component({
   selector: 'app-profile',
@@ -73,6 +75,12 @@ import { AuthService } from 'src/app/core/services/auth.service';
 export class ProfilePage implements OnInit {
   isBusiness = false; // Toggle for demo purposes
 
+  // Propiedades para logica
+  isOwnProfile = false;
+  isFollowing = false;
+  currentUserId: string | null = null;
+  profileId: string | null = null;
+
   segment = 'posts';
   businessSegment = 'menu';
   searchTerm = '';
@@ -81,18 +89,11 @@ export class ProfilePage implements OnInit {
     username: 'sofia_m',
     name: 'Sofia Martinez',
     bio: 'Explorando la ciudad y el arte contemporáneo 🎨 | Coffee lover ☕',
-    img: 'https://images.unsplash.com/photo-1494790108377-be9c29b29330?q=80&w=200',
-    followers: 1240,
-    following: 350,
-    posts: 42,
-    gallery: [
-      'https://images.unsplash.com/photo-1545989253-02cc26577f88?q=80&w=400',
-      'https://images.unsplash.com/photo-1512621776951-a57141f2eefd?q=80&w=400',
-      'https://images.unsplash.com/photo-1514525253440-b393452de23e?q=80&w=400',
-      'https://images.unsplash.com/photo-1497935586351-b67a49e012bf?q=80&w=400',
-      'https://images.unsplash.com/photo-1506744038136-46273834b3fb?q=80&w=400',
-      'https://images.unsplash.com/photo-1563911302283-d2bc129e7c1f?q=80&w=400',
-    ],
+    img: 'https://ui-avatars.com/api/?name=User',
+    followers: 0,
+    following: 0,
+    posts: 0,
+    gallery: [],
   };
 
   businessProfile = {
@@ -165,7 +166,8 @@ export class ProfilePage implements OnInit {
     private router: Router,
     private actionSheetCtrl: ActionSheetController,
     private alertCtrl: AlertController,
-    private authService: AuthService
+    private authService: AuthService,
+    private userService: UserService
   ) {
     addIcons({
       menuOutline,
@@ -187,21 +189,32 @@ export class ProfilePage implements OnInit {
   }
 
   ngOnInit() {
+    // Obtener usuario actual para lógica de seguimiento
+    this.authService.currentUser$
+      .pipe(take(1))
+      .subscribe((u) => (this.currentUserId = u?.uid || null));
+
     this.route.queryParams.subscribe((params) => {
       const profileType = params['type'];
       const profileId = params['id'];
+      this.profileId = profileId;
 
       // Si no hay ID, es mi perfil
       if (!profileId) {
+        this.isOwnProfile = true;
         this.loadOwnProfile();
       } else {
-        // Cargar perfil ajeno (lógica existente o mock)
+        this.isOwnProfile = false;
+        // Cargar perfil ajeno
+        this.loadOtherProfile(profileId);
+
         if (profileType === 'business') {
           this.isBusiness = true;
         } else {
-          this.isBusiness = false;
+          this.isBusiness = false; // Se actualizará en loadOtherProfile
         }
-        // TODO: Load actual other profile data
+
+        this.checkFollowStatus();
       }
     });
   }
@@ -242,6 +255,12 @@ export class ProfilePage implements OnInit {
     });
   }
 
+  editProfile() {
+    this.router.navigate(['/auth/setup-profile'], {
+      queryParams: { mode: 'edit' },
+    });
+  }
+
   async openMenu() {
     const actionSheet = await this.actionSheetCtrl.create({
       header: 'Opciones',
@@ -251,8 +270,7 @@ export class ProfilePage implements OnInit {
           text: 'Editar Perfil',
           icon: 'person-outline',
           handler: () => {
-            console.log('Editar perfil');
-            // TODO: Navigate to edit profile
+            this.editProfile();
           },
         },
         {
@@ -333,6 +351,66 @@ export class ProfilePage implements OnInit {
       );
     } else {
       this.filteredMenu = [...this.businessProfile.menu];
+    }
+  }
+
+  loadOtherProfile(uid: string) {
+    this.userService.getUserById(uid).subscribe((user) => {
+      if (user) {
+        this.isBusiness = user.role === 'business';
+
+        this.userProfile = {
+          ...this.userProfile,
+          username: user.username,
+          name: user.username,
+          bio: user.bio || '',
+          img:
+            user.photoURL ||
+            `https://ui-avatars.com/api/?name=${user.username}`,
+          followers: user.followersCount || 0,
+          following: user.followingCount || 0,
+        };
+
+        if (this.isBusiness) {
+          this.businessProfile = {
+            ...this.businessProfile,
+            name: user.username,
+            info: user.bio || '',
+            // img: user.photoURL ... (falta actualizar businessProfile con datos reales completos, pero suficiente por ahora)
+          };
+        }
+      }
+    });
+  }
+
+  async checkFollowStatus() {
+    if (this.currentUserId && this.profileId) {
+      try {
+        this.isFollowing = await this.userService.isFollowing(
+          this.currentUserId,
+          this.profileId
+        );
+      } catch (error) {
+        console.error('Error checking follow status:', error);
+      }
+    }
+  }
+
+  async toggleFollow() {
+    if (!this.currentUserId || !this.profileId) return;
+
+    try {
+      if (this.isFollowing) {
+        await this.userService.unfollowUser(this.currentUserId, this.profileId);
+        this.isFollowing = false;
+        this.userProfile.followers--;
+      } else {
+        await this.userService.followUser(this.currentUserId, this.profileId);
+        this.isFollowing = true;
+        this.userProfile.followers++;
+      }
+    } catch (error) {
+      console.error('Error toggling follow:', error);
     }
   }
 }

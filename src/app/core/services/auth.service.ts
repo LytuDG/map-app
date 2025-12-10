@@ -159,6 +159,17 @@ export class AuthService {
       };
 
       await this.createUserDocument(userData);
+
+      // ACTUALIZACIÓN MANUAL: Actualizar el subject inmediatamente
+      const newUser: User = {
+        ...userData,
+        createdAt: serverTimestamp() as any,
+        followersCount: 0,
+        followingCount: 0,
+      };
+      this.currentUserSubject.next(newUser);
+      await this.saveUserLocally(newUser);
+
       // Redirigir a setup-profile en lugar de home
       await this.router.navigate(['/auth/setup-profile']);
     } catch (error: any) {
@@ -207,10 +218,26 @@ export class AuthService {
         };
 
         await this.createUserDocument(userData);
+
+        // ACTUALIZACIÓN MANUAL para Google Login
+        const newUser: User = {
+          ...userData,
+          createdAt: serverTimestamp() as any,
+          followersCount: 0,
+          followingCount: 0,
+        };
+        this.currentUserSubject.next(newUser);
+        await this.saveUserLocally(newUser);
+
         // Nuevo usuario: ir a setup-profile
         await this.router.navigate(['/auth/setup-profile']);
       } else {
         // Usuario existente: ir a home
+        // ACTUALIZACIÓN MANUAL para evitar race delay
+        const existingUser = userDoc.data() as User;
+        this.currentUserSubject.next(existingUser);
+        await this.saveUserLocally(existingUser);
+
         await this.router.navigate(['/']);
       }
     } catch (error: any) {

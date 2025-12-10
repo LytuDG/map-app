@@ -407,3 +407,69 @@
     }
   }
 }
+
+// Search Results
+.user-search-item {
+  display: flex;
+  align-items: center;
+  padding: 12px;
+  background: white;
+  border-radius: 12px;
+  margin-bottom: 12px;
+  box-shadow: 0 2px 8px rgba(0, 0, 0, 0.04);
+  transition: transform 0.2s ease, box-shadow 0.2s ease;
+  cursor: pointer;
+
+  &:active {
+    transform: scale(0.98);
+  }
+
+  ion-avatar {
+    width: 48px;
+    height: 48px;
+    margin-right: 12px;
+    border: 1px solid #f3f4f6;
+  }
+
+  .user-info {
+    flex: 1;
+    overflow: hidden;
+
+    .name-row {
+      display: flex;
+      align-items: center;
+      gap: 8px;
+      margin-bottom: 2px;
+
+      h4 {
+        margin: 0;
+        font-size: 1rem;
+        font-weight: 600;
+        color: #1a1a1a;
+      }
+
+      .mini-badge {
+        font-size: 0.65rem;
+        --padding-start: 6px;
+        --padding-end: 6px;
+        --padding-top: 2px;
+        --padding-bottom: 2px;
+        letter-spacing: 0.02em;
+      }
+    }
+
+    .bio-text {
+      margin: 0;
+      font-size: 0.85rem;
+      color: #6b7280;
+      white-space: nowrap;
+      overflow: hidden;
+      text-overflow: ellipsis;
+    }
+  }
+}
+
+.text-medium {
+  color: #6b7280;
+  font-size: 0.95rem;
+}

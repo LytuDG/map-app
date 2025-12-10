@@ -11,15 +11,7 @@ import {
   IonButton,
   IonIcon,
   IonAvatar,
-  IonLabel,
   IonBadge,
-  IonCard,
-  IonCardHeader,
-  IonCardContent,
-  IonCardSubtitle,
-  IonCardTitle,
-  IonChip,
-  IonFooter,
   IonSearchbar,
   ToastController,
   ModalController,
@@ -41,11 +33,15 @@ import {
   arrowRedoOutline,
   locationSharp,
   chatbubbleEllipsesOutline,
+  chevronForwardOutline,
 } from 'ionicons/icons';
 import { CommentsModalComponent } from 'src/app/components/comments-modal/comments-modal.component';
 import { NotificationsModalComponent } from 'src/app/components/notifications-modal/notifications-modal.component';
 import { FeedService } from 'src/app/core/services/feed.service';
+import { UserService } from 'src/app/core/services/user.service';
 import { LogoComponent } from 'src/app/components/logo/logo.component';
+import { Subject } from 'rxjs';
+import { debounceTime, distinctUntilChanged, switchMap } from 'rxjs/operators';
 
 @Component({
   selector: 'app-home',
@@ -63,15 +59,7 @@ import { LogoComponent } from 'src/app/components/logo/logo.component';
     IonButton,
     IonIcon,
     IonAvatar,
-    IonLabel,
     IonBadge,
-    IonCard,
-    IonCardHeader,
-    IonCardContent,
-    IonCardSubtitle,
-    IonCardTitle,
-    IonChip,
-    IonFooter,
     IonSearchbar,
     LogoComponent,
   ],
@@ -80,19 +68,26 @@ export class HomePage implements OnInit {
   searchQuery = '';
   feedItems: any[] = [];
 
+  // Search state
+  searchResults: any[] = [];
+  isSearching = false;
+  private searchTerms = new Subject<string>();
+
   constructor(
     private toastCtrl: ToastController,
     private modalCtrl: ModalController,
     private router: Router,
     private route: ActivatedRoute,
-    private feedService: FeedService
+    private feedService: FeedService,
+    private userService: UserService
   ) {
     addIcons({
-      heartOutline,
+      notificationsOutline,
       chatbubbleEllipsesOutline,
+      chevronForwardOutline,
       locationSharp,
       paperPlaneOutline,
-      notificationsOutline,
+      heartOutline,
       chatbubbleOutline,
       heart,
       ellipsisHorizontal,
@@ -108,8 +103,29 @@ export class HomePage implements OnInit {
 
   ngOnInit() {
     this.feedService.getFeedItems().subscribe((items) => {
+      // Solo actualizar feed si no estamos buscando, o siempre mantenerlo actualizado en background
       this.feedItems = items;
     });
+
+    // Configurar pipeline de búsqueda
+    this.searchTerms
+      .pipe(
+        debounceTime(300),
+        distinctUntilChanged(),
+        switchMap((term: string) => this.userService.searchUsers(term))
+      )
+      .subscribe((users) => {
+        this.searchResults = users.map((user) => ({
+          type: 'user-result',
+          id: user.uid,
+          user: user.username,
+          userImg:
+            user.photoURL ||
+            `https://ui-avatars.com/api/?name=${user.username}`,
+          desc: user.bio,
+          role: user.role,
+        }));
+      });
   }
 
   toggleLike(item: any) {
@@ -158,9 +174,16 @@ export class HomePage implements OnInit {
   }
 
   onSearch(event: any) {
-    const query = event.target.value.toLowerCase();
+    const query = event.target.value;
     this.searchQuery = query;
-    // La búsqueda local funcionará, pero idealmente deberíamos filtrar en el servicio
+
+    if (query && query.trim() !== '') {
+      this.isSearching = true;
+      this.searchTerms.next(query);
+    } else {
+      this.isSearching = false;
+      this.searchResults = [];
+    }
   }
 
   async openNotifications() {
@@ -193,12 +216,13 @@ export class HomePage implements OnInit {
     } else if (item.type === 'deal') {
       // Minimalist Claim Action
       item.claimed = !item.claimed;
-      // No toast, just immediate UI feedback via the button state in template
     } else if (item.type === 'business') {
       // Navigate to business profile
       this.navigateToProfile(item);
+    } else if (item.type === 'user-result') {
+      // Navigate to user profile from search result
+      this.navigateToProfile(item);
     } else {
-      // Fallback
       console.log('Action for item:', item);
     }
   }
@@ -207,7 +231,6 @@ export class HomePage implements OnInit {
     item.going = !item.going;
     if (item.going) {
       item.attendees++;
-      // Minimalist: No toast, just state update
     } else {
       item.attendees--;
     }
@@ -219,17 +242,17 @@ export class HomePage implements OnInit {
     let profileType: string;
 
     if (item.type === 'post') {
-      // Regular user post
       profileId = item.user;
       profileType = 'user';
     } else if (item.type === 'business' || item.type === 'deal') {
-      // Business or deal
       profileId = item.name;
       profileType = 'business';
     } else if (item.type === 'event') {
-      // Event - could be from a business or venue
-      profileId = item.name || item.title;
-      profileType = 'business'; // Events are usually from businesses
+      profileId = item.name || item.title; // Adjust based on actual data structure
+      profileType = 'business';
+    } else if (item.type === 'user-result') {
+      profileId = item.id;
+      profileType = 'user'; // Or item.role if available
     } else {
       // Fallback
       profileId = item.user || item.name;

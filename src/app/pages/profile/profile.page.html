@@ -46,7 +46,12 @@
       </div>
 
       <div class="action-buttons">
-        <ion-button expand="block" shape="round" class="edit-btn">Editar Perfil</ion-button>
+        <ion-button expand="block" shape="round" class="edit-btn" *ngIf="isOwnProfile" (click)="editProfile()">Editar
+          Perfil</ion-button>
+        <ion-button expand="block" shape="round" [color]="isFollowing ? 'medium' : 'primary'"
+          [fill]="isFollowing ? 'outline' : 'solid'" (click)="toggleFollow()" *ngIf="!isOwnProfile">
+          {{ isFollowing ? 'Siguiendo' : 'Seguir' }}
+        </ion-button>
       </div>
     </div>
 
@@ -82,7 +87,10 @@
           <img [src]="businessProfile.img" />
         </div>
         <div class="biz-actions">
-          <ion-button size="small" shape="round" color="primary">Seguir</ion-button>
+          <ion-button size="small" shape="round" [color]="isFollowing ? 'medium' : 'primary'"
+            [fill]="isFollowing ? 'outline' : 'solid'" (click)="toggleFollow()" *ngIf="!isOwnProfile">
+            {{ isFollowing ? 'Siguiendo' : 'Seguir' }}
+          </ion-button>
           <ion-button size="small" shape="round" fill="outline">Mensaje</ion-button>
         </div>
       </div>

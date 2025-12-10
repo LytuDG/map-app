@@ -2,7 +2,7 @@
     <div class="auth-container">
         <!-- Branding Header -->
         <div class="branding">
-            <h1 class="page-title">Configurar Perfil</h1>
+            <h1 class="page-title">{{ mode === 'edit' ? 'Editar Perfil' : 'Configurar Perfil' }}</h1>
             <p class="page-subtitle">Personaliza tu experiencia en Spotl</p>
         </div>
 
@@ -64,11 +64,12 @@
                 <!-- Save Button -->
                 <ion-button expand="block" type="submit" class="primary-button" [disabled]="isLoading">
                     <ion-spinner name="crescent" *ngIf="isLoading"></ion-spinner>
-                    <span *ngIf="!isLoading">Guardar y Continuar</span>
+                    <span *ngIf="!isLoading">{{ mode === 'edit' ? 'Guardar Cambios' : 'Guardar y Continuar' }}</span>
                 </ion-button>
 
                 <!-- Skip Button -->
-                <ion-button expand="block" fill="clear" class="skip-button" (click)="onSkip()" [disabled]="isLoading">
+                <ion-button expand="block" fill="clear" class="skip-button" (click)="onSkip()" [disabled]="isLoading"
+                    *ngIf="mode !== 'edit'">
                     Omitir por ahora
                 </ion-button>
 
